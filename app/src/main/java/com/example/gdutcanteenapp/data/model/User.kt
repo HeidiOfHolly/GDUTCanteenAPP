@@ -1,6 +1,12 @@
 package com.example.gdutcanteenapp.data.model
 
-data class User(val userId:Int,
-                val userName:String,
-                val userPassword: String,
-                 val FavoriteDishes: List<Int>)
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "user")
+data class User(
+    @PrimaryKey
+    val userId:Int,
+    val userName:String,
+    val userPassword: String,
+    val FavoriteDishes: List<Int>)
