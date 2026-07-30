@@ -52,6 +52,4 @@ interface FavouriteDao {
     @Query("SELECT dishId FROM favorite_dishes WHERE userId = :userId")
     suspend fun getFavoriteDishIds(userId: Int): List<Int>
 
-
-
 }

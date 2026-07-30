@@ -24,12 +24,10 @@ interface CanteenRepository {
     suspend fun deleteWindowById(windowId: Int)
 
     // ========== Dish 操作 ==========
-    suspend fun getDishesByCanteen(canteenId: Int): List<Dish>
     suspend fun getDishesByWindow(windowId: Int): List<Dish>
     suspend fun searchDishes(keyword: String): List<Dish>
     suspend fun insertDishes(dishes: List<Dish>)
     suspend fun insertDish(dish: Dish)
-    suspend fun deleteDishesByCanteen(canteenId: Int)
     suspend fun deleteDishById(dishId: Int)
     suspend fun deleteDishesByWindow(windowId: Int)
     suspend fun deleteDishesByIds(dishIds: List<Int>)

@@ -8,5 +8,5 @@ data class User(
     @PrimaryKey
     val userId:Int,
     val userName:String,
-    val userPassword: String,
-    val FavoriteDishes: List<Int>)
+    val userPassword: String,)
+    //数据库不推荐存储列表，应该通过查询获取)

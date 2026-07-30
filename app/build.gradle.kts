@@ -51,9 +51,9 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
 
     // Room (数据库)
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
 
     // ViewModel + LiveData
     implementation(libs.lifecycle.viewmodel.ktx)
@@ -64,5 +64,5 @@ dependencies {
 
     // 用于 TabLayout 等 Material 风格组件
     implementation("com.google.android.material:material:1.11.0")
-
+}
 

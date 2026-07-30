@@ -63,10 +63,6 @@ class CanteenRepositoryImpl (
     }
 
     // ========== Dish 操作实现 ==========
-    override suspend fun getDishesByCanteen(canteenId: Int): List<Dish> {
-        return canteenDao.getDishesByCanteen(canteenId)
-    }
-
     override suspend fun getDishesByWindow(windowId: Int): List<Dish> {
         return canteenDao.getDishesByWindow(windowId)
     }
@@ -85,10 +81,6 @@ class CanteenRepositoryImpl (
 
     override suspend fun insertDish(dish: Dish) {
         canteenDao.insertDish(dish)
-    }
-
-    override suspend fun deleteDishesByCanteen(canteenId: Int) {
-        canteenDao.deleteDishesByCanteen(canteenId)
     }
 
     override suspend fun deleteDishById(dishId: Int) {
