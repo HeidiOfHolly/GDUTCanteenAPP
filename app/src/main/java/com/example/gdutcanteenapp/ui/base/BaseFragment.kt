@@ -24,12 +24,12 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        observerDate()
+        observerData()
     }
 
     abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
     abstract fun initViews()
-    abstract fun observerDate()
+    abstract fun observerData()
 
     override fun onDestroyView() {
         super.onDestroyView()

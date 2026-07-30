@@ -1,20 +1,34 @@
 package com.example.gdutcanteenapp
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
+import com.example.gdutcanteenapp.adapter.ViewPagerAdapter
+import com.example.gdutcanteenapp.databinding.ActivityMainBinding
+import com.example.gdutcanteenapp.ui.base.BaseActivity
+import com.google.android.material.tabs.TabLayoutMediator
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+class MainActivity : BaseActivity<ActivityMainBinding>() {
+    override fun getViewBinding(): ActivityMainBinding? {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    override fun initViews() {
+        setupViewPager()
+    }
+
+    override fun observeData() {
+        // TODO: 添加观察数据的逻辑
+    }
+
+    private fun setupViewPager() {
+        val adapter = ViewPagerAdapter(this, emptyList())
+        binding.viewPager.adapter = adapter
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            binding.tabLayout.setTabTextColors(
+                ContextCompat.getColor(this, R.color.black),
+                ContextCompat.getColor(this, R.color.black)
+                //具体颜色待定，根据页面设置
+            )
+            // TODO: 设置 tab 文字
+        }.attach()
     }
 }
