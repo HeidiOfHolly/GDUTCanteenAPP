@@ -20,7 +20,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun setupViewPager() {
-        val adapter = ViewPagerAdapter(this, emptyList())
+        val adapter = ViewPagerAdapter(this, emptyList())//emptyList()占位，具体的fragment列表待定
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             binding.tabLayout.setTabTextColors(
