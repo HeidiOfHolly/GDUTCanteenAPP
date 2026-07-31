@@ -1,0 +1,43 @@
+package com.example.gdutcanteenapp.ui.canteen.dish
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.gdutcanteenapp.data.model.Dish
+import com.example.gdutcanteenapp.databinding.DishItemBinding
+
+// 菜品横向列表适配器
+class WindowAdapter(
+    private val dishes: List<Dish>
+) : RecyclerView.Adapter<WindowAdapter.DishViewHolder>() {
+
+    class DishViewHolder(val binding: DishItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DishViewHolder {
+        val binding = DishItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return DishViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: DishViewHolder, position: Int) {
+        //会把下划线命名自动转化为驼峰命名
+        val dish = dishes[position]
+        holder.binding.dishName.text = dish.dishName
+        holder.binding.dishPrice.text = "￥${dish.dishPrice}"
+        holder.binding.dishTag.text = formatTags(dish.dishTags)
+    }
+
+    override fun getItemCount(): Int = dishes.size
+
+    // 把 ["招牌","热门"] 这样的 JSON 字符串转成 招牌，热门
+    private fun formatTags(raw: String): String {
+        return raw.trim()//去除首尾的空白字符
+            .removePrefix("[").removeSuffix("]")//去除开头和结尾的[]
+            .split(",")//按，，分割字符串列表
+            .map { it.trim().trim('"') }//去除每个元素的首尾空格和双引号并组合起来
+            .filter { it.isNotEmpty() }//过滤掉空字符串
+            .joinToString("，")//用中文逗号连接所有元素
+    }
+}
