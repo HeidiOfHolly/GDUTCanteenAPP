@@ -27,7 +27,6 @@ class DishListAdapter(
     override fun onBindViewHolder(holder: WindowViewHolder, position: Int) {
         val (window, dishes) = data[position]
         holder.binding.windowName.text = window.windowName
-        holder.binding.windowLocation.text = canteenName
 
         holder.binding.rvWindow.apply {
             layoutManager = LinearLayoutManager(

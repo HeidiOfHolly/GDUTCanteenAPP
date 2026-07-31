@@ -42,6 +42,15 @@
         android:text="招牌，管饱"
         android:gravity="center"/>
 
+        <ImageButton
+            android:id="@+id/like_it"
+            android:layout_width="62dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_like_foreground"
+            android:visibility="visible" />
+
     </LinearLayout>
 
 </LinearLayout>
