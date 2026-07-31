@@ -2,4 +2,6 @@
     <string name="app_name">GDUTCanteenAPP</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="long_text">文本文本文本文本文本文本文本</string>
+    <string name="short_text">文本文本</string>
 </resources>
