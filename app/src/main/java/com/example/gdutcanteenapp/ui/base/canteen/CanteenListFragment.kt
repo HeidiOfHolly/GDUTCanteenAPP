@@ -2,21 +2,29 @@ package com.example.gdutcanteenapp.ui.base.canteen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gdutcanteenapp.databinding.FragmentCanteenListBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
 
-class CanteenListFragment : BaseFragment<FragmentCanteenBinding>() {
+class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCanteenBinding {
-        return ViewBinding.inflate(inflater, container, false)
+    val viewModel by lazy { ViewModelProvider(this).get(CanteenListViewModel::class.java) }
+    private lateinit var adapter: CanteenListAdapter
+
+    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCanteenListBinding {
+        return FragmentCanteenListBinding.inflate(inflater, container, false)
     }
 
     override fun initViews() {
-        // 初始化视图，例如设置 RecyclerView 的适配器等
+        binding.canteenListRv.layoutManager = LinearLayoutManager(requireContext())
+        adapter = CanteenListAdapter()
+        binding.canteenListRv.adapter = adapter
     }
 
-    override fun observerData() {
-        // 观察数据变化，例如从 ViewModel 获取数据并更新 UI
+    override fun observeData() {
+        viewModel.canteenList.observe(viewLifecycleOwner) { canteens ->
+            adapter.submitList(canteens)
+        }
     }
 }

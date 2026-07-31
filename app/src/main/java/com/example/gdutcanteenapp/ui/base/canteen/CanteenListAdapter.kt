@@ -1,29 +1,33 @@
 package com.example.gdutcanteenapp.ui.base.canteen
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gdutcanteenapp.R
+import com.example.gdutcanteenapp.data.model.Canteen
+import com.example.gdutcanteenapp.databinding.ItemCanteenBinding
 
-class CanteenListAdapter():RecyclerView.Adapter<CanteenListAdapter.CanteenViewHolder>() {
+class CanteenListAdapter(
+    private var canteens: List<Canteen> = emptyList()
+) : RecyclerView.Adapter<CanteenListAdapter.CanteenViewHolder>() {
 
-    class CanteenViewHolder(view: View):RecyclerView.ViewHolder(view) {
-        val canteenName = view.findViewById(R.id.canteenNameTv) as? View
-    }
+    class CanteenViewHolder(val binding: ItemCanteenBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CanteenViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_canteen, parent, false)
-        return CanteenViewHolder(view)
+        val binding = ItemCanteenBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return CanteenViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CanteenViewHolder, position: Int) {
-        // 绑定数据到视图
-        // holder.canteenName?.text = "Canteen Name" // 这里需要根据实际数据进行绑定
+        holder.binding.canteenNameTv.text = canteens[position].canteenName
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount(): Int = canteens.size
 
-        return 0// 返回数据的数量，这里暂时返回0，需要根据实际数据进行修改
+    fun submitList(newCanteens: List<Canteen>) {
+        canteens = newCanteens
+        notifyDataSetChanged()
     }
 }
