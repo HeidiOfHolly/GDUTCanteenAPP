@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gdutcanteenapp.data.local.database.AppDatabase
 import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
@@ -32,6 +33,10 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
     }
 
     override fun initViews() {
+        binding.back.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         val dao = AppDatabase.getInstance(requireContext()).canteenDao()
         val repository = CanteenRepositoryImpl(dao)
         viewModel = ViewModelProvider(

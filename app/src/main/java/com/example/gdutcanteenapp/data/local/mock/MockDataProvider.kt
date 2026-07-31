@@ -9,10 +9,10 @@ object MockDataProvider {
     // ========== 获取所有食堂 ==========
     fun getMockCanteens(): List<Canteen> {
         return listOf(
-            Canteen(canteenId = 1, canteenName = "一饭"),
-            Canteen(canteenId = 2, canteenName = "二饭"),
-            Canteen(canteenId = 3, canteenName = "三饭"),
-            Canteen(canteenId = 4, canteenName = "四饭")
+            Canteen(canteenId = 1, canteenName = "一饭（东区）"),
+            Canteen(canteenId = 2, canteenName = "二饭（东区）"),
+            Canteen(canteenId = 3, canteenName = "三饭（西区）"),
+            Canteen(canteenId = 4, canteenName = "四饭（西区）")
         )
     }
 

@@ -20,6 +20,9 @@
         <argument
             android:name="canteen_id"
             app:argType="integer" />
+<!--        <action-->
+<!--            android:id="@+id/action_fragment_dish_list_to_fragment_canteen_list"-->
+<!--            app:destination="@id/fragment_canteen_list" />-->
     </fragment>
 
 </navigation>
