@@ -47,7 +47,7 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
         viewModel.load(canteenId)
     }
 
-    override fun observerData() {
+    override fun observeData() {
         viewModel.windowsWithDishes.observe(viewLifecycleOwner) { data ->
             listAdapter.submit(data)
         }

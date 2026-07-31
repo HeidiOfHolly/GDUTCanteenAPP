@@ -1,9 +1,12 @@
-package com.example.gdutcanteenapp.ui.base.canteen
+package com.example.gdutcanteenapp.ui.canteen.canteenlist
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gdutcanteenapp.R
 import com.example.gdutcanteenapp.databinding.FragmentCanteenListBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
 
@@ -18,7 +21,13 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
 
     override fun initViews() {
         binding.canteenListRv.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CanteenListAdapter()
+        adapter = CanteenListAdapter(onItemClick = { canteen ->
+            val bundle = Bundle().apply { putInt("canteen_id", canteen.canteenId) }
+            findNavController().navigate(
+                R.id.action_fragment_canteen_list_to_fragment_dish_list,
+                bundle
+            )
+        })
         binding.canteenListRv.adapter = adapter
     }
 

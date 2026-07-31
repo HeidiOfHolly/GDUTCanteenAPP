@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(.\\\\gradlew.bat :app:compileDebugKotlin -q 2>&1 | Select-Object -Last 40)"
+      "PowerShell(.\\\\gradlew.bat :app:compileDebugKotlin -q 2>&1 | Select-Object -Last 40)",
+      "Bash(export MSYS_NO_PATHCONV=1)",
+      "Bash(cd \"D:\\\\sundries\\\\study\\\\SummerCamp\\\\GDUTCanteenAPP\")",
+      "Bash(rm -f screen1.png screen2.png screen3.png screen4.png ui.xml)",
+      "Bash(ls screen*.png ui.xml)"
     ]
   }
 }

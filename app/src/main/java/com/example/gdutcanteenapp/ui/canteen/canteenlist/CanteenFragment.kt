@@ -1,4 +1,4 @@
-package com.example.gdutcanteenapp.ui.base.canteen
+package com.example.gdutcanteenapp.ui.canteen.canteenlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

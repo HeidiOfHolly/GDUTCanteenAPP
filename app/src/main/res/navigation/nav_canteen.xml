@@ -3,12 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_canteen"
     app:startDestination="@id/fragment_canteen_list">
+
     <fragment
         android:id="@+id/fragment_canteen_list"
-        android:name="com.example.gdutcanteenapp.ui.base.canteen.CanteenListFragment"
-        android:label="CanteenListFragment" >
-        <!-- 暂空，此处要跳转到菜品浏览页面 -->
+        android:name="com.example.gdutcanteenapp.ui.canteen.canteenlist.CanteenListFragment"
+        android:label="CanteenListFragment">
+        <action
+            android:id="@+id/action_fragment_canteen_list_to_fragment_dish_list"
+            app:destination="@id/fragment_dish_list" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/fragment_dish_list"
+        android:name="com.example.gdutcanteenapp.ui.canteen.dish.DishListFragment"
+        android:label="DishListFragment">
+        <argument
+            android:name="canteen_id"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

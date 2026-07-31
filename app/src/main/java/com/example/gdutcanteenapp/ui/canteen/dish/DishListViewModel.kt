@@ -29,9 +29,10 @@ class DishListViewModel(
         }
     }
 
-    // 库空时用 Mock 数据灌库，保证浏览页能读到数据
+    // 窗口表空时用 Mock 数据灌库，保证浏览页能读到数据
+    // 不能用 getAllCanteens 判断：列表页已单独灌过 canteens 表
     private suspend fun ensureSeeded() {
-        if (repository.getAllCanteens().isNotEmpty()) return
+        if (repository.getWindowsByCanteen(1).isNotEmpty()) return
         repository.insertCanteens(MockDataProvider.getMockCanteens())
         repository.insertWindows(MockDataProvider.getMockWindows())
         repository.insertDishes(MockDataProvider.getMockDishes())
