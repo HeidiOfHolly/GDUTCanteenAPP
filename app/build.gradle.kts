@@ -64,5 +64,8 @@ dependencies {
 
     // 用于 TabLayout 等 Material 风格组件
     implementation("com.google.android.material:material:1.11.0")
+
+    //用于RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
 }
 
