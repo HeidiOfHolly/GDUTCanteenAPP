@@ -33,9 +33,10 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
     }
 
     override fun initViews() {
-        binding.back.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+        binding.toolbar.title = canteenName
 
         val dao = AppDatabase.getInstance(requireContext()).canteenDao()
         val repository = CanteenRepositoryImpl(dao)
