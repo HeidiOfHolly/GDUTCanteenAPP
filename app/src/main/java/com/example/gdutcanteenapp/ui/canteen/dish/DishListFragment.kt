@@ -37,13 +37,17 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
             findNavController().navigateUp()
         }
 
-        val dao = AppDatabase.getInstance(requireContext()).canteenDao()
-        val repository = CanteenRepositoryImpl(dao)
+        val db = AppDatabase.getInstance(requireContext())
+        val repository = CanteenRepositoryImpl(db.canteenDao(), db.favouriteDao(), db.userDao())
         viewModel = ViewModelProvider(
             this, DishListViewModel.Factory(repository)
         )[DishListViewModel::class.java]
 
-        listAdapter = DishListAdapter(emptyList(), canteenName)
+        listAdapter = DishListAdapter(
+            data = emptyList(),
+            canteenName = canteenName,
+            onToggleFavorite = { dishId -> viewModel.toggleFavorite(dishId) }
+        )
         binding.rvBrowse.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = listAdapter
@@ -55,6 +59,9 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
     override fun observeData() {
         viewModel.windowsWithDishes.observe(viewLifecycleOwner) { data ->
             listAdapter.submit(data)
+        }
+        viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
+            listAdapter.submit(listAdapter.currentData(), ids)
         }
     }
 

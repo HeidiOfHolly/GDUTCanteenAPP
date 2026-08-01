@@ -5,7 +5,8 @@
       "Bash(export MSYS_NO_PATHCONV=1)",
       "Bash(cd \"D:\\\\sundries\\\\study\\\\SummerCamp\\\\GDUTCanteenAPP\")",
       "Bash(rm -f screen1.png screen2.png screen3.png screen4.png ui.xml)",
-      "Bash(ls screen*.png ui.xml)"
+      "Bash(ls screen*.png ui.xml)",
+      "PowerShell(& \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\gradlew.bat\" assembleDebug)"
     ]
   }
 }

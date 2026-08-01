@@ -1,15 +1,21 @@
 package com.example.gdutcanteenapp.data.repositoryimpl
 
 import com.example.gdutcanteenapp.data.local.database.CanteenDao
+import com.example.gdutcanteenapp.data.local.database.FavouriteDao
+import com.example.gdutcanteenapp.data.local.database.UserDao
 import com.example.gdutcanteenapp.data.model.Canteen
 import com.example.gdutcanteenapp.data.model.Dish
+import com.example.gdutcanteenapp.data.model.FavoriteDish
+import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.model.Window
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
 import kotlinx.coroutines.flow.Flow
 
 //注：在viewmodel中需要手动创建
 class CanteenRepositoryImpl (
-    private val canteenDao: CanteenDao
+    private val canteenDao: CanteenDao,
+    private val favouriteDao: FavouriteDao,
+    private val userDao: UserDao
 ) : CanteenRepository {
 
     // ========== Canteen 操作实现 ==========
@@ -50,6 +56,10 @@ class CanteenRepositoryImpl (
         return canteenDao.getWindowsByCanteen(canteenId)
     }
 
+    override suspend fun getWindowById(windowId: Int): Window? {
+        return canteenDao.getWindowById(windowId)
+    }
+
     override suspend fun insertWindows(windows: List<Window>) {
         canteenDao.insertWindows(windows)
     }
@@ -65,6 +75,10 @@ class CanteenRepositoryImpl (
     // ========== Dish 操作实现 ==========
     override suspend fun getDishesByWindow(windowId: Int): List<Dish> {
         return canteenDao.getDishesByWindow(windowId)
+    }
+
+    override suspend fun getDishesByIds(dishIds: List<Int>): List<Dish> {
+        return canteenDao.getDishesByIds(dishIds)
     }
 
     override suspend fun searchDishes(keyword: String): List<Dish> {
@@ -99,5 +113,27 @@ class CanteenRepositoryImpl (
 
     override suspend fun deleteAllDishes() {
         canteenDao.deleteAllDishes()
+    }
+
+    // ========== Favorite 操作实现 ==========
+    override suspend fun insertFavorite(favoriteDish: FavoriteDish) {
+        favouriteDao.insert(favoriteDish)
+    }
+
+    override suspend fun deleteFavorite(userId: Int, dishId: Int) {
+        favouriteDao.deleteByUserIdAndDishId(userId, dishId)
+    }
+
+    override suspend fun isFavorite(userId: Int, dishId: Int): Boolean {
+        return favouriteDao.isFavorite(userId, dishId)
+    }
+
+    override suspend fun getFavoriteDishIds(userId: Int): List<Int> {
+        return favouriteDao.getFavoriteDishIds(userId)
+    }
+
+    // ========== User 操作实现 ==========
+    override suspend fun insertUser(user: User) {
+        userDao.insertUser(user)
     }
 }

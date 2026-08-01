@@ -6,16 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.gdutcanteenapp.data.model.Canteen
 import com.example.gdutcanteenapp.data.model.Dish
+import com.example.gdutcanteenapp.data.model.FavoriteDish
+import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.model.Window
 
 @Database(
-    entities = [Canteen::class, Window::class, Dish::class],
-    version = 1,
+    entities = [Canteen::class, Window::class, Dish::class, User::class, FavoriteDish::class],
+    version = 2,
     exportSchema = false
 )
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun canteenDao(): CanteenDao
+    abstract fun favouriteDao(): FavouriteDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
@@ -27,7 +31,8 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "gdut_canteen_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }

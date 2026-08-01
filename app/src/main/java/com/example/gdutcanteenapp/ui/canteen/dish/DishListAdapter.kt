@@ -11,7 +11,9 @@ import com.example.gdutcanteenapp.databinding.DishWindowBinding
 // 窗口卡片纵向列表适配器
 class DishListAdapter(
     private var data: List<Pair<Window, List<Dish>>>,
-    private val canteenName: String
+    private val canteenName: String,
+    private var favoriteDishIds: Set<Int> = emptySet(),
+    private var onToggleFavorite: (Int) -> Unit = {}
 ) : RecyclerView.Adapter<DishListAdapter.WindowViewHolder>() {
 
     class WindowViewHolder(val binding: DishWindowBinding) :
@@ -32,14 +34,19 @@ class DishListAdapter(
             layoutManager = LinearLayoutManager(
                 context, LinearLayoutManager.HORIZONTAL, false
             )
-            adapter = WindowAdapter(dishes)
+            adapter = WindowAdapter(dishes, favoriteDishIds, onToggleFavorite)
         }
     }
 
     override fun getItemCount(): Int = data.size
 
-    fun submit(newData: List<Pair<Window, List<Dish>>>) {
+    fun submit(newData: List<Pair<Window, List<Dish>>>, newFavoriteIds: Set<Int>? = null) {
         data = newData
+        if (newFavoriteIds != null) {
+            favoriteDishIds = newFavoriteIds
+        }
         notifyDataSetChanged()
     }
+
+    fun currentData(): List<Pair<Window, List<Dish>>> = data
 }

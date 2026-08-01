@@ -80,4 +80,11 @@ interface CanteenDao {
     // 5. 删除所有菜品
     @Query("DELETE FROM dishes")
     suspend fun deleteAllDishes()
+
+    @Query("SELECT * FROM dishes WHERE dishId IN (:dishIds)")
+    suspend fun getDishesByIds(dishIds: List<Int>): List<Dish>
+
+    // ========== 通过ID查单个窗口 ==========
+    @Query("SELECT * FROM windows WHERE windowId = :windowId")
+    suspend fun getWindowById(windowId: Int): Window?
 }

@@ -8,7 +8,9 @@ import com.example.gdutcanteenapp.databinding.DishItemBinding
 
 // 菜品横向列表适配器
 class WindowAdapter(
-    private val dishes: List<Dish>
+    private val dishes: List<Dish>,
+    private val favoriteDishIds: Set<Int>,
+    private val onToggleFavorite: (Int) -> Unit
 ) : RecyclerView.Adapter<WindowAdapter.DishViewHolder>() {
 
     class DishViewHolder(val binding: DishItemBinding) :
@@ -22,11 +24,19 @@ class WindowAdapter(
     }
 
     override fun onBindViewHolder(holder: DishViewHolder, position: Int) {
-        //会把下划线命名自动转化为驼峰命名
         val dish = dishes[position]
         holder.binding.dishName.text = dish.dishName
         holder.binding.dishPrice.text = "￥${dish.dishPrice}"
         holder.binding.dishTag.text = formatTags(dish.dishTags)
+
+        val isFav = dish.dishId in favoriteDishIds
+        holder.binding.likeIt.setImageResource(
+            if (isFav) com.example.gdutcanteenapp.R.drawable.check_like_foreground
+            else com.example.gdutcanteenapp.R.drawable.ic_like_foreground
+        )
+        holder.binding.likeIt.setOnClickListener {
+            onToggleFavorite(dish.dishId)
+        }
     }
 
     override fun getItemCount(): Int = dishes.size
