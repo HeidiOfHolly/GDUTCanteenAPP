@@ -9,7 +9,8 @@
     android:elevation="5dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
         <ImageView
             android:id="@+id/iv_dish"
             android:layout_width="150dp"
@@ -64,7 +65,9 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_dish_canteen"
             android:text="@string/long_text"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

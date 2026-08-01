@@ -6,6 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/home_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
     <!-- 顶部 Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
