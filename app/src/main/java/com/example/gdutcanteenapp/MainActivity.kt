@@ -33,6 +33,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             when (position) {
                 0 -> tab.text = "首页"//暂时只有这几个界面
                 1 -> tab.text = "食堂"
+                2 -> tab.text = "个人中心"
             }
         }.attach()
     }
