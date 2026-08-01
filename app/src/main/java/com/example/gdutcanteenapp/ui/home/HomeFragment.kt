@@ -24,14 +24,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun initViews() {
         historyManager = SearchHistoryManager(requireContext())
-        binding.etSearch.setOnClickListener{ hasFocus ->
-            if( hasFocus && !isHistoryVisible ) {
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
                 isHistoryVisible = true
-                binding.historyContainer.visibility = android.view.View.VISIBLE
+                binding.historyContainer.visibility = View.VISIBLE
                 showHistory()
             } else {
                 isHistoryVisible = false
-                binding.historyContainer.visibility = android.view.View.GONE
+                binding.historyContainer.visibility = View.GONE
             }
         }
     }
@@ -53,8 +53,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun showHistory() {
-        if (historyManager.getHistory().isEmpty()) return
-        isHistoryVisible = true
+        val history = historyManager.getHistory()
+        if (history.isEmpty()) {
+            isHistoryVisible = false
+            binding.historyContainer.visibility = View.GONE
+            return
+        }
         binding.historyContainer.visibility = View.VISIBLE
         loadSearchHistory()
     }
@@ -69,7 +73,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-      private fun createChip(text: String): Chip {
+    private fun createChip(text: String): Chip {
         return Chip(requireContext()).apply {
             setText(text)
             isCloseIconVisible = true
@@ -79,8 +83,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 isHistoryVisible = false
                 binding.historyContainer.visibility = View.GONE
             }
+            setOnCloseIconClickListener {
+                historyManager.removeHistory(text)
+                showHistory()
+            }
         }
-        }
+    }
 
 
 

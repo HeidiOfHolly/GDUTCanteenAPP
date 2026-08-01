@@ -33,6 +33,13 @@ class SearchHistoryManager (context: Context) {
         history.edit().putString(KEY_HISTORY, Gson().toJson(currentHistory)).apply()
     }
 
+    fun removeHistory(keyword: String) {
+        val currentHistory = getHistory().toMutableList()
+        if (currentHistory.remove(keyword)) {
+            history.edit().putString(KEY_HISTORY, Gson().toJson(currentHistory)).apply()
+        }
+    }
+
     fun clearHistory() {
         history.edit().remove(KEY_HISTORY).apply()
         notifyListeners(emptyList())
