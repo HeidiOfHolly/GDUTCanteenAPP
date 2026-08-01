@@ -16,6 +16,10 @@ class DishListAdapter(
     private var onToggleFavorite: (Int) -> Unit = {}
 ) : RecyclerView.Adapter<DishListAdapter.WindowViewHolder>() {
 
+
+    //缓存windowadapters，避免刷新
+    private val windowAdapters = mutableMapOf<Int, WindowAdapter>()
+
     class WindowViewHolder(val binding: DishWindowBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -30,11 +34,16 @@ class DishListAdapter(
         val (window, dishes) = data[position]
         holder.binding.windowName.text = window.windowName
 
+
+        //保存当前的位置
+        val adapter = WindowAdapter(dishes, favoriteDishIds, onToggleFavorite)
+        windowAdapters[position] = adapter
+
         holder.binding.rvWindow.apply {
             layoutManager = LinearLayoutManager(
                 context, LinearLayoutManager.HORIZONTAL, false
             )
-            adapter = WindowAdapter(dishes, favoriteDishIds, onToggleFavorite)
+            this.adapter = adapter
         }
     }
 
@@ -42,10 +51,18 @@ class DishListAdapter(
 
     fun submit(newData: List<Pair<Window, List<Dish>>>, newFavoriteIds: Set<Int>? = null) {
         data = newData
+        windowAdapters.clear()
         if (newFavoriteIds != null) {
             favoriteDishIds = newFavoriteIds
         }
         notifyDataSetChanged()
+    }
+
+
+    //局部刷新的内在逻辑
+    fun updateFavorites(newFavoriteIds: Set<Int>) {
+        favoriteDishIds = newFavoriteIds
+        windowAdapters.values.forEach { it.updateFavorites(newFavoriteIds) }
     }
 
     fun currentData(): List<Pair<Window, List<Dish>>> = data

@@ -62,7 +62,7 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
             listAdapter.submit(data)
         }
         viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
-            listAdapter.submit(listAdapter.currentData(), ids)
+            listAdapter.updateFavorites(ids)
         }
     }
 
