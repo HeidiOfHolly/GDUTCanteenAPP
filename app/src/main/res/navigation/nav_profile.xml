@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_profile"
+    app:startDestination="@id/fragment_profile_home">
+
+    <fragment
+        android:id="@+id/fragment_profile_home"
+        android:name="com.example.gdutcanteenapp.ui.profile.ProfileHomeFragment"
+        android:label="ProfileHomeFragment">
+        <action
+            android:id="@+id/action_profileHome_to_favoriteFragment"
+            app:destination="@id/fragment_favorite" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_favorite"
+        android:name="com.example.gdutcanteenapp.ui.profile.FavoriteFragment"
+        android:label="FavoriteFragment" />
+
+</navigation>

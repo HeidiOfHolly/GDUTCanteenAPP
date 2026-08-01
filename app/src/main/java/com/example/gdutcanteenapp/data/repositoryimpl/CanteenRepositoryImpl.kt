@@ -120,15 +120,15 @@ class CanteenRepositoryImpl (
         favouriteDao.insert(favoriteDish)
     }
 
-    override suspend fun deleteFavorite(userId: Int, dishId: Int) {
+    override suspend fun deleteFavorite(userId: String, dishId: Int) {
         favouriteDao.deleteByUserIdAndDishId(userId, dishId)
     }
 
-    override suspend fun isFavorite(userId: Int, dishId: Int): Boolean {
+    override suspend fun isFavorite(userId: String, dishId: Int): Boolean {
         return favouriteDao.isFavorite(userId, dishId)
     }
 
-    override suspend fun getFavoriteDishIds(userId: Int): List<Int> {
+    override suspend fun getFavoriteDishIds(userId: String): List<Int> {
         return favouriteDao.getFavoriteDishIds(userId)
     }
 

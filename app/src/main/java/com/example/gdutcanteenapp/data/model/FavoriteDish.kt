@@ -30,6 +30,6 @@ import androidx.room.PrimaryKey
 data class FavoriteDish(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,          // 自增主键
-    val userId: Int,          // 用户ID（外键）
+    val userId: String,          // 用户ID（外键）
     val dishId: Int,          // 菜品ID（外键）
 )

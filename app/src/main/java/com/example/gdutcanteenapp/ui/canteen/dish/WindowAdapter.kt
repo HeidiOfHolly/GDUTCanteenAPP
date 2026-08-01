@@ -9,9 +9,14 @@ import com.example.gdutcanteenapp.databinding.DishItemBinding
 // 菜品横向列表适配器
 class WindowAdapter(
     private val dishes: List<Dish>,
-    private val favoriteDishIds: Set<Int>,
+    private var favoriteDishIds: Set<Int>,
     private val onToggleFavorite: (Int) -> Unit
 ) : RecyclerView.Adapter<WindowAdapter.DishViewHolder>() {
+
+    fun updateFavorites(newFavoriteIds: Set<Int>) {
+        favoriteDishIds = newFavoriteIds
+        notifyItemRangeChanged(0, dishes.size)
+    }
 
     class DishViewHolder(val binding: DishItemBinding) :
         RecyclerView.ViewHolder(binding.root)

@@ -39,9 +39,9 @@ interface CanteenRepository {
 
     // ========== Favorite 操作 ==========
     suspend fun insertFavorite(favoriteDish: FavoriteDish)
-    suspend fun deleteFavorite(userId: Int, dishId: Int)
-    suspend fun isFavorite(userId: Int, dishId: Int): Boolean
-    suspend fun getFavoriteDishIds(userId: Int): List<Int>
+    suspend fun deleteFavorite(userId: String, dishId: Int)
+    suspend fun isFavorite(userId: String, dishId: Int): Boolean
+    suspend fun getFavoriteDishIds(userId: String): List<Int>
 
     // ========== User 操作 ==========
     suspend fun insertUser(user: User)
