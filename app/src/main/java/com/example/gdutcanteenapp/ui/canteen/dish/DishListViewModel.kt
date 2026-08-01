@@ -32,7 +32,7 @@ class DishListViewModel(
                 window to repository.getDishesByWindow(window.windowId)
             }
             _windowsWithDishes.value = result
-            refreshFavorites()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
         }
     }
 
@@ -44,12 +44,14 @@ class DishListViewModel(
             } else {
                 repository.insertFavorite(FavoriteDish(userId = CURRENT_USER_ID, dishId = dishId))
             }
-            refreshFavorites()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
         }
     }
 
-    private suspend fun refreshFavorites() {
-        _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+    fun refreshFavorites() {
+        viewModelScope.launch {
+            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+        }
     }
 
     // 窗口表空时用 Mock 数据灌库，保证浏览页能读到数据
@@ -62,7 +64,7 @@ class DishListViewModel(
     }
 
     private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userPassword = "123456"))
+        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userAccount = "user001", userPassword = "123456"))
     }
 
     class Factory(
@@ -75,6 +77,6 @@ class DishListViewModel(
     }
 
     companion object {
-        private const val CURRENT_USER_ID = 1
+        private const val CURRENT_USER_ID = "1"
     }
 }

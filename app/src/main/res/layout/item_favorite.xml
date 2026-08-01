@@ -21,6 +21,13 @@
             app:layout_constraintRight_toRightOf="parent"
             android:src="@drawable/dish1"/>
 
+        <ImageButton
+            android:id="@+id/favorite_dish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/check_like_foreground"
+            app:layout_constraintLeft_toRightOf="@+id/iv_dish"/>
+
         <TextView
             android:id="@+id/tv_dish_name"
             android:layout_width="wrap_content"

@@ -62,7 +62,7 @@ class FavoriteViewModel(private val repository: CanteenRepository) : ViewModel()
     }
 
     private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userPassword = "123456"))
+        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userAccount = "user001", userPassword = "123456"))
     }
 
     class Factory(
@@ -75,6 +75,6 @@ class FavoriteViewModel(private val repository: CanteenRepository) : ViewModel()
     }
 
     companion object {
-        private const val CURRENT_USER_ID = 1
+        private const val CURRENT_USER_ID = "1"
     }
 }

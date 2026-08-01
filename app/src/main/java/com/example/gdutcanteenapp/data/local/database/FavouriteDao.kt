@@ -26,7 +26,7 @@ interface FavouriteDao {
 
     // 删除收藏（通过用户ID和菜品ID）
     @Query("DELETE FROM favorite_dishes WHERE userId = :userId AND dishId = :dishId")
-    suspend fun deleteByUserIdAndDishId(userId: Int, dishId: Int)
+    suspend fun deleteByUserIdAndDishId(userId: String, dishId: Int)
 
     // 获取所有收藏（一次性）
     @Query("SELECT * FROM favorite_dishes")
@@ -38,18 +38,18 @@ interface FavouriteDao {
 
     // 获取某个用户的所有收藏
     @Query("SELECT * FROM favorite_dishes WHERE userId = :userId")
-    suspend fun getFavoritesByUserId(userId: Int): List<FavoriteDish>
+    suspend fun getFavoritesByUserId(userId: String): List<FavoriteDish>
 
     // 获取某个用户的所有收藏（Flow）
     @Query("SELECT * FROM favorite_dishes WHERE userId = :userId")
-    fun getFavoritesByUserIdFlow(userId: Int): Flow<List<FavoriteDish>>
+    fun getFavoritesByUserIdFlow(userId: String): Flow<List<FavoriteDish>>
 
     // 检查是否已收藏
     @Query("SELECT COUNT(*) > 0 FROM favorite_dishes WHERE userId = :userId AND dishId = :dishId")
-    suspend fun isFavorite(userId: Int, dishId: Int): Boolean
+    suspend fun isFavorite(userId: String, dishId: Int): Boolean
 
     // 获取用户收藏的菜品ID列表
     @Query("SELECT dishId FROM favorite_dishes WHERE userId = :userId")
-    suspend fun getFavoriteDishIds(userId: Int): List<Int>
+    suspend fun getFavoriteDishIds(userId: String): List<Int>
 
 }

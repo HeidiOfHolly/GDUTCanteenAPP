@@ -8,7 +8,6 @@ import com.example.gdutcanteenapp.databinding.FragmentProfileBinding
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(){
 
-    val viewModel by lazy { ViewModelProvider(this).get() }
 
     override fun getViewBinding(
         inflater: LayoutInflater,
