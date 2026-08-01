@@ -8,7 +8,8 @@ import com.example.gdutcanteenapp.databinding.ItemFavoriteBinding
 
 class FavoriteAdapter(
     private var items: List<FavoriteDishItem>,
-    private val onRemoveFavorite: (Int) -> Unit
+    private val onToggleFavorite: (Int) -> Unit,
+    private var favoriteDishIds: Set<Int> = emptySet()
 ) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemFavoriteBinding) :
@@ -23,23 +24,29 @@ class FavoriteAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        val isFav = item.dishId in favoriteDishIds
         holder.binding.apply {
             tvDishName.text = item.dishName
             tvDishPrice.text = "￥${item.dishPrice}"
             tvDishTags.text = item.dishTags
             tvDishCanteen.text = item.canteenName
             tvDishWindow.text = item.windowName
-            favoriteDish.setImageResource(R.drawable.check_like_foreground)
+            favoriteDish.setImageResource(
+                if (isFav) R.drawable.like2 else R.drawable.like1
+            )
             favoriteDish.setOnClickListener {
-                onRemoveFavorite(item.dishId)
+                onToggleFavorite(item.dishId)
             }
         }
     }
 
     override fun getItemCount(): Int = items.size
 
-    fun submit(newItems: List<FavoriteDishItem>) {
+    fun submit(newItems: List<FavoriteDishItem>, newFavoriteIds: Set<Int>? = null) {
         items = newItems
+        if (newFavoriteIds != null) {
+            favoriteDishIds = newFavoriteIds
+        }
         notifyDataSetChanged()
     }
 }

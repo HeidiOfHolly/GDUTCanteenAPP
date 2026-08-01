@@ -7,7 +7,7 @@ import android.widget.Toast
 import com.example.gdutcanteenapp.R
 import com.example.gdutcanteenapp.databinding.FragmentHomeBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
-import com.example.gdutcanteenapp.ui.canteen.FavoriteDish.FavoriteFragment
+import com.example.gdutcanteenapp.ui.profile.FavoriteFragment
 import com.google.android.material.chip.Chip
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {

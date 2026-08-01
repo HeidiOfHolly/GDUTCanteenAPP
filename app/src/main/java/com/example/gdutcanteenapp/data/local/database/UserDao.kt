@@ -8,9 +8,9 @@ import com.example.gdutcanteenapp.data.model.User
 
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertUser(user: User)
 
     @Query("SELECT * FROM user WHERE userId = :userId")
-    suspend fun getUserById(userId: Int): User?
+    suspend fun getUserById(userId: String): User?
 }

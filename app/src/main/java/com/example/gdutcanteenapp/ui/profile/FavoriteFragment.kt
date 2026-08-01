@@ -1,7 +1,9 @@
 package com.example.gdutcanteenapp.ui.profile
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
 
     private lateinit var viewModel: FavoriteViewModel
     private lateinit var adapter: FavoriteAdapter
+    private var currentItems: List<FavoriteDishItem> = emptyList()
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -33,23 +36,46 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             this, FavoriteViewModel.Factory(repository)
         )[FavoriteViewModel::class.java]
 
-        adapter = FavoriteAdapter(emptyList()) { dishId ->
-            viewModel.removeFavorite(dishId)
-        }
+        adapter = FavoriteAdapter(
+            items = emptyList(),
+            onToggleFavorite = { dishId -> viewModel.toggleFavorite(dishId) }
+        )
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@FavoriteFragment.adapter
         }
+
     }
 
     override fun observeData() {
         viewModel.favoriteItems.observe(viewLifecycleOwner) { items ->
+            currentItems = items
             adapter.submit(items)
+        }
+        viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
+            adapter.submit(currentItems, ids)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.load()
+        if (::viewModel.isInitialized) {
+            val keyword = arguments?.getString(ARG_KEYWORD)
+            if (!keyword.isNullOrEmpty()) {
+                viewModel.searchDishes(keyword)
+            } else {
+                viewModel.load()
+            }
+        }
+    }
+
+    companion object {
+        private const val ARG_KEYWORD = "keyword"
+
+        fun newInstanceByKeyword(keyword: String): FavoriteFragment {
+            return FavoriteFragment().apply {
+                arguments = bundleOf(ARG_KEYWORD to keyword)
+            }
+        }
     }
 }
