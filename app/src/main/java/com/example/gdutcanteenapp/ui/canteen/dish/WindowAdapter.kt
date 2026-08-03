@@ -31,7 +31,11 @@ class WindowAdapter(
     override fun onBindViewHolder(holder: DishViewHolder, position: Int) {
         val dish = dishes[position]
         holder.binding.dishName.text = dish.dishName
-        holder.binding.dishPrice.text = "￥${dish.dishPrice}"
+        if (dish.dishPrice.isNotEmpty()){
+            holder.binding.dishPrice.text = "￥${dish.dishPrice}"
+        }else{
+            holder.binding.dishPrice.text = "￥ 称重计价"
+        }
         holder.binding.dishTag.text = formatTags(dish.dishTags)
 
         val isFav = dish.dishId in favoriteDishIds
