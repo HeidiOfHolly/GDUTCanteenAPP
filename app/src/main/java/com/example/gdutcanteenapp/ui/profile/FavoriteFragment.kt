@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gdutcanteenapp.data.local.database.AppDatabase
 import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
@@ -45,7 +46,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             onToggleFavorite = { dishId -> viewModel.toggleFavorite(dishId) }
         )
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(),2)
             adapter = this@FavoriteFragment.adapter
         }
 

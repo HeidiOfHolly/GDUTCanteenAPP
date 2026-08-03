@@ -32,7 +32,7 @@ class RegistrationViewModel(
                 repository.login(account, password)
                 _loginState.value = AuthState.Success
             } catch (e: Exception) {
-                _loginState.value = AuthState.Error(e.message ?: "登录失败")
+                _loginState.value = AuthState.Error(e.message ?: "学号或密码错误")
             }
         }
     }
@@ -60,14 +60,24 @@ class RegistrationViewModel(
         return when {
             account.isEmpty() || username.isEmpty() || password.isEmpty() || passwordRepeat.isEmpty() ->
                 "请填写完整信息"
-            username.length > 12 ->
-                "用户名不得超过12个字"
+            username.length > 12 ||username.length <2 ->
+                "用户名应在2-12个字符之间"
+            account.length>20 || account.length<6 ->
+                "学号格式不对"
             password.length < 8 || password.length > 20 ->
                 "密码长度应在8-20位之间"
             password != passwordRepeat ->
                 "两次输入的密码不一致"
+            validatePassword(password).not() ->
+                "密码必须包含字母和数字"
             else -> null
         }
+    }
+
+    fun validatePassword(password: String): Boolean {
+        val hasLetter = password.any { it.isLetter() }
+        val hasDigit = password.any { it.isDigit() }
+        return hasLetter && hasDigit
     }
 
     class Factory(
