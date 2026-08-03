@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gdutcanteenapp.ui.canteen.canteenlist.CanteenFragment
+import com.example.gdutcanteenapp.ui.chat.ChatFragment
 import com.example.gdutcanteenapp.ui.home.HomeFragment
 import com.example.gdutcanteenapp.ui.profile.ProfileFragment
 
@@ -11,6 +12,7 @@ class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
     private val fragments: List<Fragment> = listOf<Fragment>(
         HomeFragment(),
         CanteenFragment(),
+        ChatFragment(),
         ProfileFragment()
     )
 

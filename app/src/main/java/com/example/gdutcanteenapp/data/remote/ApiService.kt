@@ -6,6 +6,8 @@ import com.example.gdutcanteenapp.data.remote.dto.DishDto
 import com.example.gdutcanteenapp.data.remote.dto.FavoriteResultDto
 import com.example.gdutcanteenapp.data.remote.dto.LoginRequest
 import com.example.gdutcanteenapp.data.remote.dto.RegisterRequest
+import com.example.gdutcanteenapp.data.remote.dto.ChatSessionRequest
+import com.example.gdutcanteenapp.data.remote.dto.ChatSessionResponse
 import com.example.gdutcanteenapp.data.remote.dto.TagDto
 import com.example.gdutcanteenapp.data.remote.dto.WindowDto
 import retrofit2.http.Body
@@ -103,4 +105,17 @@ interface ApiService {
         @Query("tagIds") tagIds: String? = null,
         @Query("maxPrice") maxPrice: String? = null
     ): ApiResponse<DishDto>
+
+    // ========== AI 聊天 ==========
+
+    /**
+     * 创建新会话。
+     * 每次进入聊天页面时调用，获取 sessionId 后用于后续 SSE 消息发送。
+     * 设计思路：后端通过 sessionId 关联多轮对话上下文，先创建会话再发消息
+     * 可以保证所有消息都绑定到正确的会话，避免首次消息无会话归属的歧义。
+     */
+    @POST("chat/sessions")
+    suspend fun createChatSession(
+        @Body body: ChatSessionRequest
+    ): ApiResponse<ChatSessionResponse>
 }

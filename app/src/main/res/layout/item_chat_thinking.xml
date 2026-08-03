@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    思考中占位气泡 — 在 AI 返回第一个 token 之前显示。
+    左对齐灰色背景 + "正在思考..." 文字，给用户流式等待的视觉反馈。
+    在 ChatAdapter 中作为 VIEW_TYPE_THINKING 渲染。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:background="@drawable/bg_message_l"
+        android:maxWidth="250dp"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/tv_thinking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在思考…"
+            android:textColor="#888888"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</FrameLayout>

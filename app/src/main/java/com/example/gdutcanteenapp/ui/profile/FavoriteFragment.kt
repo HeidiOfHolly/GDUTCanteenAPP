@@ -27,7 +27,11 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
 
     override fun initViews() {
         binding.ivBack.setOnClickListener {
-            findNavController().navigateUp()
+            try {
+                findNavController().navigateUp()
+            } catch (e: IllegalStateException) {
+                parentFragmentManager.popBackStack()
+            }
         }
 
         val db = AppDatabase.getInstance(requireContext())

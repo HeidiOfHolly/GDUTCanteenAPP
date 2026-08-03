@@ -11,6 +11,8 @@ object RetrofitClient {
 
     private const val BASE_URL = "http://47.113.224.195:32502/api/v1/"
 
+
+    //认证拦截器，每次请求前自动检测是否有token，如果有就加入请求头
     private val authInterceptor = Interceptor { chain ->
         val request = chain.request()
         val token = TokenManager.getToken()
@@ -38,12 +40,13 @@ object RetrofitClient {
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)//设置服务器地址
+            .client(okHttpClient)//设置网络客户端
+            .addConverterFactory(GsonConverterFactory.create())//将JSON自动转换为kotlin
             .build()
     }
 
+    //对外暴露API实例，可以供其他代码调用
     val apiService: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }
