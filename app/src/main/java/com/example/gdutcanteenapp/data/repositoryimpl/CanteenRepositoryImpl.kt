@@ -131,6 +131,25 @@ class CanteenRepositoryImpl(
         return null
     }
 
+    /**
+     * 通过菜名 ID 获取收藏人数。
+     *
+     * 实现策略：调用 GET /api/v1/dishes/{dishId}，返回的 DishDto 中已包含 favoriteCount 字段。
+     * API 优先 — 接口失败或未返回数据时降级返回 0（避免阻塞首页推荐等 UI 展示）。
+     * 供首页推荐、菜品排序等场景使用。
+     */
+    override suspend fun getDishFavoriteCount(dishId: Int): Int {
+        try {
+            val response = RetrofitClient.apiService.getDishDetail(dishId)
+            if (response.isSuccess && response.data != null) {
+                return response.data.favoriteCount
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "API getDishFavoriteCount failed for dishId=$dishId", e)
+        }
+        return 0
+    }
+
     override suspend fun insertDishes(dishes: List<Dish>) = canteenDao.insertDishes(dishes)
     override suspend fun insertDish(dish: Dish) = canteenDao.insertDish(dish)
     override suspend fun deleteDishById(dishId: Int) = canteenDao.deleteDishById(dishId)
@@ -143,6 +162,7 @@ class CanteenRepositoryImpl(
     // ========== Favorite（旧接口 — 本地数据库兼容） ==========
     override suspend fun insertFavorite(favoriteDish: FavoriteDish) {
         favouriteDao.insert(favoriteDish)
+        canteenDao.incrementFavoriteCount(favoriteDish.dishId)
         // 同时调用 API
         if (TokenManager.isLoggedIn) {
             try { RetrofitClient.apiService.addFavorite(favoriteDish.dishId) } catch (_: Exception) {}
@@ -151,6 +171,7 @@ class CanteenRepositoryImpl(
 
     override suspend fun deleteFavorite(userId: String, dishId: Int) {
         favouriteDao.deleteByUserIdAndDishId(userId, dishId)
+        canteenDao.decrementFavoriteCount(dishId)
         if (TokenManager.isLoggedIn) {
             try { RetrofitClient.apiService.removeFavorite(dishId) } catch (_: Exception) {}
         }
@@ -166,21 +187,27 @@ class CanteenRepositoryImpl(
     override suspend fun addFavoriteApi(dishId: Int): Boolean {
         try {
             val response = RetrofitClient.apiService.addFavorite(dishId)
-            return response.isSuccess
+            if (response.isSuccess) {
+                canteenDao.incrementFavoriteCount(dishId)
+                return true
+            }
         } catch (e: Exception) {
             Log.e(TAG, "API addFavorite failed", e)
-            return false
         }
+        return false
     }
 
     override suspend fun removeFavoriteApi(dishId: Int): Boolean {
         try {
             val response = RetrofitClient.apiService.removeFavorite(dishId)
-            return response.isSuccess
+            if (response.isSuccess) {
+                canteenDao.decrementFavoriteCount(dishId)
+                return true
+            }
         } catch (e: Exception) {
             Log.e(TAG, "API removeFavorite failed", e)
-            return false
         }
+        return false
     }
 
     override suspend fun getFavoriteDishesFromApi(page: Int, pageSize: Int): List<Dish> {

@@ -16,5 +16,7 @@ data class Dish(
     val dishId: Int,
     val dishName: String,
     val dishPrice: String,
-    val dishTags: String,//room不支持list所以改成string，读取Json转成字符串
-    val windowId: Int)
+    val dishTags: String,
+    val windowId: Int,
+    /** 收藏人数，从 API 获取，默认 0 */
+    val favoriteCount: Int = 0
