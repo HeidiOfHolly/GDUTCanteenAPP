@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
 import com.example.gdutcanteenapp.data.model.Dish
 import com.example.gdutcanteenapp.data.model.FavoriteDish
-import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.model.Window
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
 import kotlinx.coroutines.launch
@@ -25,8 +23,6 @@ class DishListViewModel(
 
     fun load(canteenId: Int) {
         viewModelScope.launch {
-            ensureSeeded()
-            ensureDefaultUser()
             val windows = repository.getWindowsByCanteen(canteenId)
             val result = windows.map { window ->
                 window to repository.getDishesByWindow(window.windowId)
@@ -52,19 +48,6 @@ class DishListViewModel(
         viewModelScope.launch {
             _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
         }
-    }
-
-    // 窗口表空时用 Mock 数据灌库，保证浏览页能读到数据
-    // 不能用 getAllCanteens 判断：列表页已单独灌过 canteens 表
-    private suspend fun ensureSeeded() {
-        if (repository.getWindowsByCanteen(1).isNotEmpty()) return
-        repository.insertCanteens(MockDataProvider.getMockCanteens())
-        repository.insertWindows(MockDataProvider.getMockWindows())
-        repository.insertDishes(MockDataProvider.getMockDishes())
-    }
-
-    private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userAccount = "user001", userPassword = "123456"))
     }
 
     class Factory(
