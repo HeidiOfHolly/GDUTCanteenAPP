@@ -37,25 +37,27 @@
         <TextView
             android:id="@+id/tv_dish_name"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@+id/iv_dish"
             android:text="@string/short_text"
             android:textSize="25sp" />
         <TextView
             android:id="@+id/tv_dish_price"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@+id/tv_dish_name"
             android:text="@string/short_text"
             android:textSize="20sp" />
         <TextView
             android:id="@+id/tv_dish_tags"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_dish_price"
@@ -65,7 +67,8 @@
         <TextView
             android:id="@+id/tv_dish_canteen"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_dish_tags"
@@ -74,7 +77,7 @@
         <TextView
             android:id="@+id/tv_dish_window"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_dish_canteen"
