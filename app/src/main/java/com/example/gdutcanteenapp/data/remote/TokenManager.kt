@@ -9,5 +9,9 @@ object TokenManager {
 
     fun getToken(): String? = token
 
+    fun clearToken() {
+        token = null
+    }
+
     val isLoggedIn: Boolean get() = token != null
 }

@@ -30,9 +30,12 @@ class FavoriteViewModel(
     private val _favoriteDishIds = MutableLiveData<Set<Int>>(emptySet())
     val favoriteDishIds: LiveData<Set<Int>> = _favoriteDishIds
 
+    private var seeded = false
+
     fun searchDishes(keyword: String) {
         viewModelScope.launch {
             ensureSeeded()
+            ensureDefaultUser()
             val dishes = repository.searchDishes(keyword)
             _favoriteItems.value = dishes.map { dish ->
                 val window = repository.getWindowById(dish.windowId)
@@ -60,7 +63,17 @@ class FavoriteViewModel(
                 _favoriteItems.value = emptyList()
                 return@launch
             }
-            val dishes = repository.getDishesByIds(dishIds)
+            var dishes = repository.getDishesByIds(dishIds)
+            val cachedIds = dishes.map { it.dishId }.toSet()
+            val missingIds = dishIds.filterNot { it in cachedIds }
+            // 本地没缓存到的收藏菜品（写入时外键约束被静默吞掉等），从 API 补拉，保证收藏列表有内容
+            if (missingIds.isNotEmpty()) {
+                val fetched = missingIds.mapNotNull { repository.getDishDetail(it) }
+                if (fetched.isNotEmpty()) {
+                    repository.insertDishes(fetched)
+                    dishes = dishes + fetched
+                }
+            }
             val items = dishes.map { dish ->
                 val window = repository.getWindowById(dish.windowId)
                 val canteen = window?.let { repository.getCanteenById(it.canteenId) }
@@ -97,10 +110,20 @@ class FavoriteViewModel(
     }
 
     private suspend fun ensureSeeded() {
-        if (repository.getWindowsByCanteen(1).isNotEmpty()) return
-        repository.insertCanteens(MockDataProvider.getMockCanteens())
-        repository.insertWindows(MockDataProvider.getMockWindows())
-        repository.insertDishes(MockDataProvider.getMockDishes())
+        if (seeded) return
+        val canteens = repository.getAllCanteens()
+        if (canteens.isEmpty()) {
+            // API 不可用：灌入本地 mock 数据
+            repository.insertCanteens(MockDataProvider.getMockCanteens())
+            repository.insertWindows(MockDataProvider.getMockWindows())
+            repository.insertDishes(MockDataProvider.getMockDishes())
+        } else {
+            // API 可用：把每个食堂的窗口缓存到本地，搜索结果的菜品才能解析出窗口名和食堂名
+            canteens.forEach { canteen ->
+                repository.getWindowsByCanteen(canteen.canteenId)
+            }
+        }
+        seeded = true
     }
 
     private suspend fun ensureDefaultUser() {

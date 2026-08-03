@@ -5,6 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+// 只保留 User 外键：搜索结果里的 API 菜品往往不在本地 dishes 表中，
+// 若再对 Dish 建外键，收藏这类菜品会直接触发 FOREIGN KEY constraint failed
 @Entity(
     tableName = "favorite_dishes",
     foreignKeys = [
@@ -13,12 +15,6 @@ import androidx.room.PrimaryKey
             parentColumns = ["userId"],
             childColumns = ["userId"],
             onDelete = ForeignKey.CASCADE  // 用户删除 → 该用户的收藏自动删除
-        ),
-        ForeignKey(
-            entity = Dish::class,
-            parentColumns = ["dishId"],
-            childColumns = ["dishId"],
-            onDelete = ForeignKey.CASCADE  // 菜品删除 → 对应收藏自动删除
         )
     ],
     indices = [
