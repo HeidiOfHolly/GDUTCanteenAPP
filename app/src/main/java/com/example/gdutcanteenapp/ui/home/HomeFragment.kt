@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gdutcanteenapp.R
 import com.example.gdutcanteenapp.databinding.FragmentHomeBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
@@ -33,6 +34,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 isHistoryVisible = false
                 binding.historyContainer.visibility = View.GONE
             }
+        }
+        binding.recyclerView.apply {
+            layoutManager = GridLayoutManager(requireContext(),2)
+            adapter = this.adapter
         }
     }
 

@@ -210,7 +210,7 @@ class CanteenRepositoryImpl(
                 LoginRequest(studentNo = account, password = password)
             )
         } catch (e: Exception) {
-            throw Exception("学号或密码错误")
+            throw Exception("网络异常，请稍后重试")
         }
         if (response.isSuccess && response.data != null) {
             TokenManager.setToken(response.data)
