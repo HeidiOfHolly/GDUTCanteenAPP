@@ -1,6 +1,7 @@
 package com.example.gdutcanteenapp.ui.chat
 
 import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -42,17 +43,18 @@ class ChatAdapter(private var msgList: List<Msg> = emptyList()) : RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             Msg.TYPE_RECEIVED -> {
-                val view = View.inflate(parent.context, R.layout.item_message_l, null)
+                val view = inflater.inflate(R.layout.item_message_l, parent, false)
                 LeftViewHolder(view)
             }
             Msg.TYPE_SENT -> {
-                val view = View.inflate(parent.context, R.layout.litem_message_r, null)
+                val view = inflater.inflate(R.layout.litem_message_r, parent, false)
                 RightViewHolder(view)
             }
             Msg.TYPE_THINKING -> {
-                val view = View.inflate(parent.context, R.layout.item_chat_thinking, null)
+                val view = inflater.inflate(R.layout.item_chat_thinking, parent, false)
                 ThinkingViewHolder(view)
             }
             else -> throw IllegalArgumentException("Unknown viewType: $viewType")

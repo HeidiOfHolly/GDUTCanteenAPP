@@ -21,6 +21,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
 
     private lateinit var viewModel: ChatViewModel
     private lateinit var adapter: ChatAdapter
+    /** 上一次消息条数，用于判断是否有新消息加入 */
+    private var lastItemCount = 0
 
     override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatBinding {
         return FragmentChatBinding.inflate(inflater, container, false)
@@ -51,13 +53,27 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
     override fun observeData() {
         // 观察消息列表 — 流式接收时 LiveData 频繁更新，逐字刷新聊天气泡
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
+            val totalItems = messages.size
+            val isNewMessage = totalItems > lastItemCount
+            lastItemCount = totalItems
+
             adapter.submitList(messages)
-            // 智能自动滚动：仅在用户接近底部时才自动滚动，避免打断查看历史消息
-            val lm = binding.recyclerView.layoutManager as LinearLayoutManager
-            val lastVisible = lm.findLastVisibleItemPosition()
-            val totalItems = adapter.itemCount
-            if (totalItems > 0 && lastVisible >= totalItems - 2) {
-                binding.recyclerView.smoothScrollToPosition(totalItems - 1)
+
+            if (totalItems == 0) return@observe
+
+            // 新消息加入（用户发送、思考占位、AI 首 token）→ 强制滚动到底部
+            // 仅内容变化（流式追加 token）→ 仅在用户接近底部时滚动，不打断查看历史
+            val shouldScroll = isNewMessage || {
+                val lm = binding.recyclerView.layoutManager as LinearLayoutManager
+                val lastVisible = lm.findLastCompletelyVisibleItemPosition()
+                lastVisible >= totalItems - 3
+            }()
+
+            if (shouldScroll) {
+                // 用 post 确保在 RecyclerView 完成本次 layout 之后再滚动
+                binding.recyclerView.post {
+                    binding.recyclerView.smoothScrollToPosition(totalItems - 1)
+                }
             }
         }
 
