@@ -18,6 +18,8 @@ import com.example.gdutcanteenapp.data.remote.dto.toDish
 import com.example.gdutcanteenapp.data.remote.dto.toWindow
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
 import kotlinx.coroutines.flow.Flow
+import org.json.JSONObject
+import retrofit2.HttpException
 
 class CanteenRepositoryImpl(
     private val canteenDao: CanteenDao,
@@ -203,25 +205,51 @@ class CanteenRepositoryImpl(
     }
 
     override suspend fun login(account: String, password: String): String {
-        val response = RetrofitClient.apiService.login(
-            LoginRequest(studentNo = account, password = password)
-        )
+        val response = try {
+            RetrofitClient.apiService.login(
+                LoginRequest(studentNo = account, password = password)
+            )
+        } catch (e: Exception) {
+            throw Exception("学号或密码错误")
+        }
         if (response.isSuccess && response.data != null) {
             TokenManager.setToken(response.data)
             return response.data
         }
-        throw Exception(response.message.ifEmpty { "登录失败" })
+        throw Exception("学号或密码错误")
     }
 
     override suspend fun register(account: String, username: String, password: String): String {
-        val response = RetrofitClient.apiService.register(
-            RegisterRequest(studentNo = account, username = username, password = password)
-        )
+        val response = try {
+            RetrofitClient.apiService.register(
+                RegisterRequest(studentNo = account, username = username, password = password)
+            )
+        } catch (e: HttpException) {
+            throw toRegisterError(e)
+        } catch (e: Exception) {
+            throw Exception("网络异常，请稍后重试")
+        }
         if (response.isSuccess && response.data != null) {
             TokenManager.setToken(response.data)
             return response.data
         }
         throw Exception(response.message.ifEmpty { "注册失败" })
+    }
+
+
+    private fun toRegisterError(e: HttpException): Exception {
+        val errorBody = e.response()?.errorBody()?.string()
+        if (errorBody != null) {
+            try {
+                val json = JSONObject(errorBody)
+                return when (json.optInt("code")) {
+                    40901 -> Exception("该学号已注册")
+                    40902 -> Exception("用户名已被占用")
+                    else -> Exception(json.optString("message").ifEmpty { "注册失败" })
+                }
+            } catch (_: Exception) {}
+        }
+        return Exception("注册失败")
     }
 
     // ========== Tags ==========
