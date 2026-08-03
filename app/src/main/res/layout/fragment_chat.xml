@@ -16,32 +16,25 @@
     <LinearLayout
         android:id="@+id/input_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="8dp"
         android:paddingVertical="6dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_emoji"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/smile"
-            android:contentDescription="表情" />
-
         <EditText
             android:id="@+id/et_input"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="8dp"
             android:background="@drawable/frame2"
             android:gravity="top|start"
-            android:hint="输入消息…"
+            android:hint="唔知食咩？嚟问我啦~"
             android:inputType="textMultiLine"
             android:maxLines="4"
-            android:paddingHorizontal="12dp"
+            android:paddingHorizontal="18dp"
             android:paddingVertical="8dp" />
 
         <ImageView

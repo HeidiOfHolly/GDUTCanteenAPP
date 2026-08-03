@@ -76,5 +76,11 @@ dependencies {
 
     //添加 Gson 依赖
     implementation("com.google.code.gson:gson:2.10.1")
+
+    // ✅ 使用稳定版本
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    // ✅ 确保其他库版本兼容（2023年推荐）
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.9.0")
 }
 
