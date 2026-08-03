@@ -20,3 +20,4 @@ data class Dish(
     val windowId: Int,
     /** 收藏人数，从 API 获取，默认 0 */
     val favoriteCount: Int = 0
+)

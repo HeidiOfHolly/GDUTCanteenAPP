@@ -20,6 +20,9 @@ class ProfileHomeFragment : BaseFragment<FragmentProfileHomeBinding>() {
     }
 
     override fun initViews() {
+        binding.userName.text = "用户昵称：${TokenManager.getUserName()}"
+        binding.userId.text = "用户账号：${TokenManager.getUserId()}"
+
         binding.userLike.setOnClickListener {
             findNavController().navigate(R.id.action_profileHome_to_favoriteFragment)
         }

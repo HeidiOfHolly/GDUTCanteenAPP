@@ -234,7 +234,7 @@ class CanteenRepositoryImpl(
             LoginRequest(studentNo = account, password = password)
         )
         if (response.isSuccess && response.data != null) {
-            TokenManager.setToken(response.data)
+            TokenManager.setToken(response.data, account)
             return response.data
         }
         throw Exception(response.message.ifEmpty { "登录失败" })
@@ -245,7 +245,7 @@ class CanteenRepositoryImpl(
             RegisterRequest(studentNo = account, username = username, password = password)
         )
         if (response.isSuccess && response.data != null) {
-            TokenManager.setToken(response.data)
+            TokenManager.setToken(response.data, account, username)
             return response.data
         }
         throw Exception(response.message.ifEmpty { "注册失败" })
