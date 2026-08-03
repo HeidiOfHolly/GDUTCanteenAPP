@@ -36,13 +36,25 @@ interface CanteenRepository {
     suspend fun deleteDishesByWindow(windowId: Int)
     suspend fun deleteDishesByIds(dishIds: List<Int>)
     suspend fun deleteAllDishes()
+    suspend fun getDishDetail(dishId: Int): Dish?
 
     // ========== Favorite 操作 ==========
+    // 旧接口（本地数据库兼容）
     suspend fun insertFavorite(favoriteDish: FavoriteDish)
     suspend fun deleteFavorite(userId: String, dishId: Int)
     suspend fun isFavorite(userId: String, dishId: Int): Boolean
     suspend fun getFavoriteDishIds(userId: String): List<Int>
 
-    // ========== User 操作 ==========
+    // 新接口（使用 API token，不再传 userId）
+    suspend fun addFavoriteApi(dishId: Int): Boolean
+    suspend fun removeFavoriteApi(dishId: Int): Boolean
+    suspend fun getFavoriteDishesFromApi(page: Int = 1, pageSize: Int = 20): List<Dish>
+
+    // ========== User / Auth 操作 ==========
     suspend fun insertUser(user: User)
+    suspend fun login(account: String, password: String): String
+    suspend fun register(account: String, username: String, password: String): String
+
+    // ========== Tags ==========
+    suspend fun getAllTagNames(): List<String>
 }
