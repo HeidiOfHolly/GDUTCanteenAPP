@@ -19,4 +19,9 @@ data class Dish(
     val dishTags: String,
     val windowId: Int,
     /** 收藏人数，从 API 获取，默认 0 */
+<<<<<<< HEAD
+    val favoriteCount: Int = 0
+)
+=======
     val favoriteCount: Int = 0)
+>>>>>>> 581b6d6579b9288880866280219083513d234919

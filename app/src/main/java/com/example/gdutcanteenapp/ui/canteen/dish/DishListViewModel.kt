@@ -11,6 +11,7 @@ import com.example.gdutcanteenapp.data.model.FavoriteDish
 import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.model.Window
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
+import com.example.gdutcanteenapp.data.remote.TokenManager
 import kotlinx.coroutines.launch
 
 class DishListViewModel(
@@ -32,7 +33,7 @@ class DishListViewModel(
                 window to repository.getDishesByWindow(window.windowId)
             }
             _windowsWithDishes.value = result
-            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 
@@ -40,17 +41,17 @@ class DishListViewModel(
         viewModelScope.launch {
             val current = _favoriteDishIds.value ?: emptySet()
             if (dishId in current) {
-                repository.deleteFavorite(CURRENT_USER_ID, dishId)
+                repository.deleteFavorite(TokenManager.getUserId(), dishId)
             } else {
-                repository.insertFavorite(FavoriteDish(userId = CURRENT_USER_ID, dishId = dishId))
+                repository.insertFavorite(FavoriteDish(userId = TokenManager.getUserId(), dishId = dishId))
             }
-            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 
     fun refreshFavorites() {
         viewModelScope.launch {
-            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 
@@ -64,7 +65,7 @@ class DishListViewModel(
     }
 
     private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userAccount = "user001", userPassword = "123456"))
+        repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
     }
 
     class Factory(
@@ -74,9 +75,5 @@ class DishListViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return DishListViewModel(repository) as T
         }
-    }
-
-    companion object {
-        private const val CURRENT_USER_ID = "1"
     }
 }

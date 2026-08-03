@@ -240,7 +240,7 @@ class CanteenRepositoryImpl(
             throw Exception("网络异常，请稍后重试")
         }
         if (response.isSuccess && response.data != null) {
-            TokenManager.setToken(response.data)
+            TokenManager.setToken(response.data, account)
             return response.data
         }
         throw Exception("学号或密码错误")
@@ -257,7 +257,7 @@ class CanteenRepositoryImpl(
             throw Exception("网络异常，请稍后重试")
         }
         if (response.isSuccess && response.data != null) {
-            TokenManager.setToken(response.data)
+            TokenManager.setToken(response.data, account, username)
             return response.data
         }
         throw Exception(response.message.ifEmpty { "注册失败" })

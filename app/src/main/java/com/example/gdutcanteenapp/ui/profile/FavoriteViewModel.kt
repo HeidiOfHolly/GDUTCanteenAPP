@@ -9,6 +9,7 @@ import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
 import com.example.gdutcanteenapp.data.model.FavoriteDish
 import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
+import com.example.gdutcanteenapp.data.remote.TokenManager
 import kotlinx.coroutines.launch
 
 data class FavoriteDishItem(
@@ -49,7 +50,7 @@ class FavoriteViewModel(
                     canteenName = canteen?.canteenName ?: ""
                 )
             }
-            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 
@@ -57,7 +58,7 @@ class FavoriteViewModel(
         viewModelScope.launch {
             ensureSeeded()
             ensureDefaultUser()
-            val dishIds = repository.getFavoriteDishIds(CURRENT_USER_ID)
+            val dishIds = repository.getFavoriteDishIds(TokenManager.getUserId())
             _favoriteDishIds.value = dishIds.toSet()
             if (dishIds.isEmpty()) {
                 _favoriteItems.value = emptyList()
@@ -94,17 +95,17 @@ class FavoriteViewModel(
         viewModelScope.launch {
             val current = _favoriteDishIds.value ?: emptySet()
             if (dishId in current) {
-                repository.deleteFavorite(CURRENT_USER_ID, dishId)
+                repository.deleteFavorite(TokenManager.getUserId(), dishId)
             } else {
-                repository.insertFavorite(FavoriteDish(userId = CURRENT_USER_ID, dishId = dishId))
+                repository.insertFavorite(FavoriteDish(userId = TokenManager.getUserId(), dishId = dishId))
             }
-            _favoriteDishIds.value = repository.getFavoriteDishIds(CURRENT_USER_ID).toSet()
+            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 
     fun removeFavorite(dishId: Int) {
         viewModelScope.launch {
-            repository.deleteFavorite(CURRENT_USER_ID, dishId)
+            repository.deleteFavorite(TokenManager.getUserId(), dishId)
             load()
         }
     }
@@ -127,7 +128,7 @@ class FavoriteViewModel(
     }
 
     private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = CURRENT_USER_ID, userName = "默认用户", userAccount = "user001", userPassword = "123456"))
+        repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
     }
 
     private fun formatTags(raw: String): String {
@@ -146,9 +147,5 @@ class FavoriteViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return FavoriteViewModel(repository) as T
         }
-    }
-
-    companion object {
-        private const val CURRENT_USER_ID = "1"
     }
 }

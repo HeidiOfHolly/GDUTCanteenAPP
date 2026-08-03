@@ -10,6 +10,7 @@ import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
 import com.example.gdutcanteenapp.data.model.Canteen
 import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
+import com.example.gdutcanteenapp.data.remote.TokenManager
 import kotlinx.coroutines.launch
 
 class CanteenListViewModel(application: Application) : AndroidViewModel(application) {
@@ -34,7 +35,7 @@ class CanteenListViewModel(application: Application) : AndroidViewModel(applicat
     private fun loadCanteens() {
         viewModelScope.launch {
             _isLoading.value = true
-            repository.insertUser(User(userId = "1", userName = "默认用户", userAccount = "user001", userPassword = "123456"))
+            repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
             // insertCanteens 使用 REPLACE 策略，重复执行不会产生重复数据
             repository.insertCanteens(MockDataProvider.getMockCanteens())
             _canteenList.value = repository.getAllCanteens()
