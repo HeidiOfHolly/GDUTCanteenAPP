@@ -12,7 +12,7 @@ import com.example.gdutcanteenapp.data.model.Window
 
 @Database(
     entities = [Canteen::class, Window::class, Dish::class, User::class, FavoriteDish::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 

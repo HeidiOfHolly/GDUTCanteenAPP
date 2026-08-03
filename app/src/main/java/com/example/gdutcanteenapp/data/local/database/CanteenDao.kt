@@ -84,6 +84,14 @@ interface CanteenDao {
     @Query("SELECT * FROM dishes WHERE dishId IN (:dishIds)")
     suspend fun getDishesByIds(dishIds: List<Int>): List<Dish>
 
+    /** 收藏人数 +1 */
+    @Query("UPDATE dishes SET favoriteCount = favoriteCount + 1 WHERE dishId = :dishId")
+    suspend fun incrementFavoriteCount(dishId: Int)
+
+    /** 收藏人数 -1（不低于 0） */
+    @Query("UPDATE dishes SET favoriteCount = MAX(favoriteCount - 1, 0) WHERE dishId = :dishId")
+    suspend fun decrementFavoriteCount(dishId: Int)
+
     // ========== 通过ID查单个窗口 ==========
     @Query("SELECT * FROM windows WHERE windowId = :windowId")
     suspend fun getWindowById(windowId: Int): Window?

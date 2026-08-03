@@ -47,6 +47,7 @@ fun DishDto.toDish(): Dish {
         dishName = dishName,
         dishPrice = dishPrice?.toString() ?: "",
         dishTags = "[$tagsJson]",
-        windowId = windowId
+        windowId = windowId,
+        favoriteCount = favoriteCount
     )
 }

@@ -1,7 +1,7 @@
 package com.example.gdutcanteenapp.ui.chat
 
-import android.view.LayoutInflater
 import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -43,20 +43,18 @@ class ChatAdapter(private var msgList: List<Msg> = emptyList()) : RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        // 必须用 inflate(layout, parent, false)，不能 View.inflate(context, layout, null)：
-        // 后者 root 为 null 时根节点的 layout_width="match_parent" 不会解析成 LayoutParams，
-        // RecyclerView 会补 LinearLayoutManager 默认的 WRAP_CONTENT 宽，导致 layout_gravity 失去对齐空间
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             Msg.TYPE_RECEIVED -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_message_l, parent, false)
+                val view = inflater.inflate(R.layout.item_message_l, parent, false)
                 LeftViewHolder(view)
             }
             Msg.TYPE_SENT -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.litem_message_r, parent, false)
+                val view = inflater.inflate(R.layout.litem_message_r, parent, false)
                 RightViewHolder(view)
             }
             Msg.TYPE_THINKING -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_thinking, parent, false)
+                val view = inflater.inflate(R.layout.item_chat_thinking, parent, false)
                 ThinkingViewHolder(view)
             }
             else -> throw IllegalArgumentException("Unknown viewType: $viewType")

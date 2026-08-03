@@ -38,6 +38,9 @@ interface CanteenRepository {
     suspend fun deleteAllDishes()
     suspend fun getDishDetail(dishId: Int): Dish?
 
+    /** 获取指定菜品的收藏人数，供首页推荐等场景调用 */
+    suspend fun getDishFavoriteCount(dishId: Int): Int
+
     // ========== Favorite 操作 ==========
     // 旧接口（本地数据库兼容）
     suspend fun insertFavorite(favoriteDish: FavoriteDish)
