@@ -12,6 +12,7 @@ import com.example.gdutcanteenapp.data.remote.dto.ChatRequest
 import com.example.gdutcanteenapp.data.remote.dto.ChatSessionRequest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import android.util.Log
 import java.util.UUID
 
 /**
@@ -121,6 +122,12 @@ class ChatViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 // 异常：移除思考占位，追加错误消息
+                Log.e("ChatViewModel", "流式请求失败", e)
+                val errorDetail = when {
+                    e.message != null -> e.message!!
+                    e.cause?.message != null -> "原因: ${e.cause!!.message}"
+                    else -> "未知错误(${e.javaClass.simpleName})"
+                }
                 val updated = _messages.value.orEmpty().toMutableList()
                 val thinkingIdx = updated.indexOfLast { it.type == Msg.TYPE_THINKING }
                 if (thinkingIdx >= 0) {
@@ -128,7 +135,7 @@ class ChatViewModel : ViewModel() {
                 }
                 updated.add(
                     Msg(
-                        content = "抱歉，出了点问题：${e.message ?: "请稍后重试"}",
+                        content = "抱歉，出了点问题：$errorDetail",
                         type = Msg.TYPE_RECEIVED
                     )
                 )

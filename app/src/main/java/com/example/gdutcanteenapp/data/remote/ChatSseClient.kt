@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
 object ChatSseClient {
 
     // SSE 流式端点 URL，对应接口文档 POST /api/v1/chat（响应 Content-Type: text/event-stream）
-    private const val CHAT_STREAM_URL = "http://47.113.224.195:32502/api/v1/chat"
+    private const val CHAT_STREAM_URL = "http://47.113.224.195:32502/api/chat"
 
     private val gson = Gson()
 
@@ -103,25 +103,26 @@ object ChatSseClient {
         }
 
         try {
-            // 逐行读取 SSE 响应体
-            while (!source.exhausted()) {
-                val line = source.readUtf8Line() ?: continue
+            // 整个 SSE 读取必须在 IO 线程执行 — OkHttp source 是阻塞网络流，
+            // 留在主线程会触发 NetworkOnMainThreadException
+            withContext(Dispatchers.IO) {
+                while (!source.exhausted()) {
+                    val line = source.readUtf8Line() ?: continue
 
-                // SSE 协议：数据行以 "data:" 开头
-                if (line.startsWith("data:")) {
-                    val data = line.removePrefix("data:").trim()
+                    if (line.startsWith("data:")) {
+                        val data = line.removePrefix("data:").trim()
 
-                    // OpenAI 兼容格式的流结束标记
-                    if (data == "[DONE]") break
-                    if (data.isEmpty()) continue
+                        if (data == "[DONE]") return@withContext
+                        if (data.isEmpty()) continue
 
-                    val content = parseSseContent(data)
-                    if (content != null) {
-                        trySend(content)  // 发射 token 到 Flow
+                        val content = parseSseContent(data)
+                        if (content != null) {
+                            trySend(content)
+                        }
                     }
                 }
             }
-            close()  // 正常结束
+            close()
         } catch (e: Exception) {
             close(e)  // 异常传播给 collector
         }
