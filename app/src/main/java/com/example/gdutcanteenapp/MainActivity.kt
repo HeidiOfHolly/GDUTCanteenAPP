@@ -31,9 +31,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             )
             //设置tab文字
             when (position) {
-                0 -> tab.text = "首页"//暂时只有这几个界面
+                0 -> tab.text = "首页"
                 1 -> tab.text = "食堂"
-                2 -> tab.text = "个人中心"
+                2 -> tab.text = "AI助手"
+                3 -> tab.text = "个人中心"
             }
         }.attach()
     }
