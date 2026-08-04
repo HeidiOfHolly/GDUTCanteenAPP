@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://47.113.224.195:32502/api/v1/"
+    private const val BASE_URL = "http://47.113.224.195:32503/api/v1/"
 
 
     //认证拦截器，每次请求前自动检测是否有token，如果有就加入请求头
