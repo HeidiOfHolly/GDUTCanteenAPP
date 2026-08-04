@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
 import com.example.gdutcanteenapp.data.model.FavoriteDish
 import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
@@ -113,16 +112,9 @@ class FavoriteViewModel(
     private suspend fun ensureSeeded() {
         if (seeded) return
         val canteens = repository.getAllCanteens()
-        if (canteens.isEmpty()) {
-            // API 不可用：灌入本地 mock 数据
-            repository.insertCanteens(MockDataProvider.getMockCanteens())
-            repository.insertWindows(MockDataProvider.getMockWindows())
-            repository.insertDishes(MockDataProvider.getMockDishes())
-        } else {
-            // API 可用：把每个食堂的窗口缓存到本地，搜索结果的菜品才能解析出窗口名和食堂名
             canteens.forEach { canteen ->
                 repository.getWindowsByCanteen(canteen.canteenId)
-            }
+
         }
         seeded = true
     }

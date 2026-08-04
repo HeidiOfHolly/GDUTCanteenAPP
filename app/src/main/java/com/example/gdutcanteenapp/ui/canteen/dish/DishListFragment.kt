@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gdutcanteenapp.data.local.database.AppDatabase
-import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
 import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
 import com.example.gdutcanteenapp.databinding.DishBrowseBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
@@ -20,13 +19,9 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
 
     private val canteenId: Int
         get() = arguments?.getInt(ARG_CANTEEN_ID) ?: 1
-
     private val canteenName: String
-        // 每次读取 canteenName 时，都执行这里的代码
-        get() = MockDataProvider.getMockCanteens()
-            .firstOrNull { it.canteenId == canteenId }?.canteenName ?: ""
-    //获得一个跟当前id一样的餐厅，不然就返回“”
-    //返回集合中第一个元素 如果不是就返回
+        get() = arguments?.getString("canteen_name") ?: "食堂"
+
 
     override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): DishBrowseBinding {
         return DishBrowseBinding.inflate(inflater, container, false)

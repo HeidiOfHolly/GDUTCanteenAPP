@@ -47,12 +47,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         backStackListener = FragmentManager.OnBackStackChangedListener {
             updateHomeContentVisibility()
         }
-        parentFragmentManager.addOnBackStackChangedListener(backStackListener!!)
+        childFragmentManager.addOnBackStackChangedListener(backStackListener!!)
         updateHomeContentVisibility()
     }
 
     override fun onDestroyView() {
-        backStackListener?.let { parentFragmentManager.removeOnBackStackChangedListener(it) }
+        backStackListener?.let { childFragmentManager.removeOnBackStackChangedListener(it) }
         backStackListener = null
         super.onDestroyView()
     }
@@ -65,7 +65,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             } else {
                 historyManager.addHistory(keyword)
                 val favoriteFragment = FavoriteFragment.newInstanceByKeyword(keyword)
-                parentFragmentManager.beginTransaction()
+                // 必须用 childFragmentManager 而非 parentFragmentManager：
+                // ViewPager2 切页只限制它管理的 tab Fragment（HomeFragment）到 STARTED，
+                // 挂在 Activity FragmentManager 上的子 Fragment 不受限，切走时不会进 onPause，
+                // 切回时 onResume 不触发，搜索结果列表不会刷新。
+                // 用 childFragmentManager 后子 Fragment 生命周期跟随 HomeFragment，切回即刷新。
+                childFragmentManager.beginTransaction()
                     .replace(R.id.home_container, favoriteFragment)
                     .addToBackStack(null)
                     .commit()
@@ -75,7 +80,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     // 首页控件在搜索结果页打开时隐藏，back stack 清空后恢复，让结果页覆盖整屏
     private fun updateHomeContentVisibility() {
-        val searchShowing = parentFragmentManager.backStackEntryCount > 0
+        val searchShowing = childFragmentManager.backStackEntryCount > 0
         binding.toolbar.visibility = if (searchShowing) View.GONE else View.VISIBLE
         binding.ivDish.visibility = if (searchShowing) View.GONE else View.VISIBLE
         binding.tvRecommend.visibility = if (searchShowing) View.GONE else View.VISIBLE
