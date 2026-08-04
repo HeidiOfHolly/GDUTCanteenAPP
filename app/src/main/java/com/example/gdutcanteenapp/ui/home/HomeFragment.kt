@@ -124,6 +124,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.recyclerView.visibility = if (searchShowing) View.GONE else View.VISIBLE
         // historyContainer 始终保持初始的隐藏状态，避免搜索结果页残留历史面板
         binding.historyContainer.visibility = View.GONE
+        // 从搜索结果页退回首页时清空搜索栏（无论是否搜到结果）
+        if (!searchShowing) {
+            binding.etSearch.setText("")
+        }
     }
 
     private fun showHistory() {
@@ -156,6 +160,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 binding.etSearch.setText(text)
                 binding.etSearch.setSelection(text.length)
                 isHistoryVisible = false
+                // 点击历史记录直接触发搜索（与点击搜索按钮走同一流程）
+                val favoriteFragment = FavoriteFragment.newInstanceByKeyword(text)
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.home_container, favoriteFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
             setOnCloseIconClickListener {
                 historyManager.removeHistory(text)

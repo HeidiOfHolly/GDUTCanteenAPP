@@ -68,6 +68,15 @@
         android:textSize="25sp"
         android:textColor="@color/black"/>
 
+    <Button
+        android:id="@+id/delete_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:text="清空所有聊天历史"
+        android:textSize="25sp"
+        android:textColor="@color/black"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import com.example.gdutcanteenapp.data.local.database.AppDatabase
 import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
 import com.example.gdutcanteenapp.databinding.FragmentFavoriteBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
 
@@ -29,11 +31,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
 
     override fun initViews() {
         binding.ivBack.setOnClickListener {
-            try {
-                findNavController().navigateUp()
-            } catch (e: IllegalStateException) {
-                parentFragmentManager.popBackStack()
-            }
+            navigateBack()
         }
 
         val db = AppDatabase.getInstance(requireContext())
@@ -60,6 +58,11 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
         viewModel.favoriteItems.observe(viewLifecycleOwner) { items ->
             currentItems = items
             adapter.submit(items)
+            // 搜索模式（带 keyword）下结果为空 → 弹窗引导返回首页；收藏页（无 keyword）不提示
+            val keyword = arguments?.getString(ARG_KEYWORD)
+            if (!keyword.isNullOrEmpty() && items.isEmpty()) {
+                showEmptyResultDialog()
+            }
         }
         viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
             adapter.submit(currentItems, ids)
@@ -77,6 +80,33 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             }
         }
 
+    }
+
+    private var emptyResultDialog: AlertDialog? = null
+
+    /** 返回上一页：兼容导航组件 NavHost 内和 Fragment 事务两种添加方式 */
+    private fun navigateBack() {
+        try {
+            findNavController().navigateUp()
+        } catch (e: IllegalStateException) {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    /** 搜索无结果时弹窗，点击"是"返回首页 */
+    private fun showEmptyResultDialog() {
+        if (emptyResultDialog?.isShowing == true) return
+        emptyResultDialog = MaterialAlertDialogBuilder(requireContext())
+            .setMessage("未找到搜索结果，点击下方按钮退回到首页")
+            .setPositiveButton("是") { _, _ -> navigateBack() }
+            .setCancelable(false)
+            .show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        emptyResultDialog?.dismiss()
+        emptyResultDialog = null
     }
 
     companion object {
