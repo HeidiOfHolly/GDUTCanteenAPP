@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gdutcanteenapp.data.local.database.AppDatabase
 import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
 import com.example.gdutcanteenapp.databinding.DishBrowseBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // 菜品浏览页：某个食堂的所有窗口 + 每个窗口的菜品
 class DishListFragment : BaseFragment<DishBrowseBinding>() {

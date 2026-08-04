@@ -9,7 +9,7 @@
       "PowerShell(& \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\gradlew.bat\" assembleDebug)",
       "WebFetch(domain:s.apifox.cn)",
       "WebSearch",
-      "PowerShell(Get-ChildItem \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\gradle\\\\wrapper\\\\\" | ForEach-Object { $_.Name })"
+      "PowerShell(adb shell *)"
     ]
   }
 }

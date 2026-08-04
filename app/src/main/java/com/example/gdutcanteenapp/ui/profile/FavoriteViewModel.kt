@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.gdutcanteenapp.data.model.FavoriteDish
-import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
 import com.example.gdutcanteenapp.data.remote.TokenManager
 import kotlinx.coroutines.launch
@@ -34,8 +33,6 @@ class FavoriteViewModel(
 
     fun searchDishes(keyword: String) {
         viewModelScope.launch {
-            ensureSeeded()
-            ensureDefaultUser()
             val dishes = repository.searchDishes(keyword)
             _favoriteItems.value = dishes.map { dish ->
                 val window = repository.getWindowById(dish.windowId)
@@ -55,9 +52,7 @@ class FavoriteViewModel(
 
     fun load() {
         viewModelScope.launch {
-            ensureSeeded()
-            ensureDefaultUser()
-            val dishIds = repository.getFavoriteDishIds(TokenManager.getUserId())
+            val dishIds = repository.getFavoriteDishIds(CURRENT_USER_ID)
             _favoriteDishIds.value = dishIds.toSet()
             if (dishIds.isEmpty()) {
                 _favoriteItems.value = emptyList()
@@ -119,9 +114,6 @@ class FavoriteViewModel(
         seeded = true
     }
 
-    private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
-    }
 
     private fun formatTags(raw: String): String {
         return raw.trim()
@@ -139,5 +131,9 @@ class FavoriteViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return FavoriteViewModel(repository) as T
         }
+    }
+
+    companion object {
+        private const val CURRENT_USER_ID = "1"
     }
 }

@@ -22,6 +22,7 @@ data class WindowDto(
     val canteenId: Int
 )
 
+//也是转换成自己APP里需要的数据类型，保证完全一样，可以进行存入本地或者运行等方法
 fun WindowDto.toWindow(): Window = Window(windowId, windowName, canteenId)
 
 data class CanteenDetailDto(
