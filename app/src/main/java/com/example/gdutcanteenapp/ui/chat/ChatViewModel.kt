@@ -176,6 +176,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         _isSending.value = false
     }
 
+    fun clearHistory() {
+        val key = "chat_history_${TokenManager.getUserId()}"
+        prefs.edit().remove(key).apply()
+        _messages.value = emptyList()
+    }
+
     override fun onCleared() {
         super.onCleared()
         cancelStream()

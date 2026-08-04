@@ -26,7 +26,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             binding.tabLayout.setTabTextColors(
                 ContextCompat.getColor(this, R.color.black),
-                ContextCompat.getColor(this, R.color.brown2)
+                ContextCompat.getColor(this, R.color.black)
                 //具体颜色待定，根据页面设置
             )
             //设置tab文字

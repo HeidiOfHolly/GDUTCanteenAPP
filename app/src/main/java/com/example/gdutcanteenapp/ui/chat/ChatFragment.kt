@@ -29,8 +29,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
     }
 
     override fun initViews() {
-        // ViewModel — 使用 Factory 模式（与项目其他 ViewModel 一致）
-        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        // ViewModel — 使用requireActivity绑定Mainactivity，这样才能传递给profile进行删除
+        viewModel = ViewModelProvider(requireActivity())[ChatViewModel::class.java]
         // RecyclerView：从底部开始堆叠（聊天界面标准行为）
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.stackFromEnd = true

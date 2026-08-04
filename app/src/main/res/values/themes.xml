@@ -4,6 +4,9 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
+    <style name="Theme.GDUTCanteenApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- 你的主题配置 -->
+    </style>
     <style name="CustomCheckBox" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/white</item>    <!-- 未选中颜色 -->
         <item name="colorControlActivated">@color/black</item>  <!-- 选中颜色 -->

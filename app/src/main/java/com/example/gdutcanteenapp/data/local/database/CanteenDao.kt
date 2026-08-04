@@ -84,10 +84,6 @@ interface CanteenDao {
     @Query("SELECT * FROM dishes WHERE dishId IN (:dishIds)")
     suspend fun getDishesByIds(dishIds: List<Int>): List<Dish>
 
-    /** 按收藏人数降序取前 N 道菜（离线兜底） */
-    @Query("SELECT * FROM dishes ORDER BY favoriteCount DESC LIMIT :limit")
-    suspend fun getTopDishesByFavoriteCount(limit: Int): List<Dish>
-
     /** 收藏人数 +1 */
     @Query("UPDATE dishes SET favoriteCount = favoriteCount + 1 WHERE dishId = :dishId")
     suspend fun incrementFavoriteCount(dishId: Int)

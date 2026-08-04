@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/yellow2"
     android:orientation="vertical">
 
     <TextView
@@ -68,6 +67,15 @@
         android:textSize="25sp"
         android:textColor="@color/black"/>
 
+    <Button
+        android:id="@+id/delete_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:text="清空所有聊天历史"
+        android:textSize="25sp"
+        android:textColor="@color/black"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -79,7 +87,6 @@
         android:layout_height="wrap_content"
         android:textSize="25sp"
         android:text="退出登录"
-        android:backgroundTint="@color/brown2"
         android:layout_gravity="center"/>
 
 </LinearLayout>
