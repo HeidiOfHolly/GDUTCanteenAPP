@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.example.gdutcanteenapp.databinding.FragmentCanteenBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
 
+//作为navigation的容器
 class CanteenFragment : BaseFragment<FragmentCanteenBinding>() {
 
     override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCanteenBinding {
@@ -12,7 +13,6 @@ class CanteenFragment : BaseFragment<FragmentCanteenBinding>() {
     }
 
     override fun initViews() {
-        // 初始化视图，例如设置 RecyclerView 的适配器等
     }
 
     override fun observeData() {

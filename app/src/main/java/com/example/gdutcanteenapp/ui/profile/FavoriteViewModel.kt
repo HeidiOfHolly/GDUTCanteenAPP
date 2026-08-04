@@ -32,8 +32,13 @@ class FavoriteViewModel(
 
     private var seeded = false
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun searchDishes(keyword: String) {
         viewModelScope.launch {
+            // 先缓存窗口/食堂，否则搜索结果里的窗口名、食堂名会因本地无数据而空白
+            ensureSeeded()
             val dishes = repository.searchDishes(keyword)
             _favoriteItems.value = dishes.map { dish ->
                 val window = repository.getWindowById(dish.windowId)
@@ -54,6 +59,7 @@ class FavoriteViewModel(
     fun load() {
         viewModelScope.launch {
             try {
+                _isLoading.value = true
                 val dishIds = repository.getFavoriteDishIds(TokenManager.getUserId())
                 _favoriteDishIds.value = dishIds.toSet()
                 if (dishIds.isEmpty()) {
@@ -94,6 +100,8 @@ class FavoriteViewModel(
             } catch (e: Exception) {
                 Log.w(TAG, "load favorites failed", e)
             }
+            finally {
+                _isLoading.value = false}
         }
     }
 
@@ -119,6 +127,7 @@ class FavoriteViewModel(
     private suspend fun ensureSeeded() {
         if (seeded) return
         val canteens = repository.getAllCanteens()
+        if (canteens.isEmpty()) return
         canteens.forEach { canteen ->
             repository.getWindowsByCanteen(canteen.canteenId)
 

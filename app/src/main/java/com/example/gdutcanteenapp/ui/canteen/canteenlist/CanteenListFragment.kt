@@ -20,6 +20,11 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
     }
 
     override fun initViews() {
+        if(viewModel.isLoading.value == true) {
+            binding.progressBar.visibility = android.view.View.VISIBLE
+        } else {
+            binding.progressBar.visibility = android.view.View.GONE
+        }
         binding.canteenListRv.layoutManager = LinearLayoutManager(requireContext())
         adapter = CanteenListAdapter(onItemClick = { canteen ->
             val bundle = Bundle().apply { putInt("canteen_id", canteen.canteenId)

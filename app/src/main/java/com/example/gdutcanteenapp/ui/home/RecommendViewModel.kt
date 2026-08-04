@@ -64,6 +64,7 @@ class RecommendViewModel(private val repository: CanteenRepository) : ViewModel(
     private suspend fun ensureSeeded() {
         if (seeded) return
         val canteens = repository.getAllCanteens()
+        if (canteens.isEmpty()) return
         canteens.forEach { canteen ->
             repository.getWindowsByCanteen(canteen.canteenId)
         }

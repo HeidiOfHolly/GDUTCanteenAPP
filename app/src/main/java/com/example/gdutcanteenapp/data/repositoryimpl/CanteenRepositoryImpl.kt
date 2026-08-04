@@ -81,7 +81,21 @@ class CanteenRepositoryImpl(
         return canteenDao.getWindowsByCanteen(canteenId)
     }
 
-    override suspend fun getWindowById(windowId: Int): Window? = canteenDao.getWindowById(windowId)
+    override suspend fun getWindowById(windowId: Int): Window? {
+        canteenDao.getWindowById(windowId)?.let { return it }
+        // 兜底：本地窗口表没有该窗口（未 seed 或 seed 时接口失败）时，拉取全部食堂+窗口并缓存，
+        // 避免收藏/搜索等页面的窗口名、食堂名空白。getWindowsByCanteen 成功后已写入本地，后续命中缓存。
+        try {
+            val canteens = getAllCanteens()
+            for (canteen in canteens) {
+                val windows = getWindowsByCanteen(canteen.canteenId)
+                windows.firstOrNull { it.windowId == windowId }?.let { return it }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "getWindowById API fallback failed for windowId=$windowId", e)
+        }
+        return null
+    }
     override suspend fun insertWindows(windows: List<Window>) = canteenDao.insertWindows(windows)
     override suspend fun deleteWindowsByCanteen(canteenId: Int) = canteenDao.deleteWindowsByCanteen(canteenId)
     override suspend fun deleteWindowById(windowId: Int) = canteenDao.deleteWindowById(windowId)

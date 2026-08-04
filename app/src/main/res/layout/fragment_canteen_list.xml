@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_canteen_list"
-    android:orientation="vertical"
     android:background="@color/yellow2">
 
-    <TextView
-        android:id="@+id/titleTv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="食堂"
-        android:textSize="35sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"/>
-    <TextView
-        android:id="@+id/introduceTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="窝工的食堂，好吃😋"
-        android:textSize="20sp"
-        android:layout_marginLeft="10dp"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/canteenListRv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="食堂"
+            android:textSize="35sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/introduceTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="窝工的食堂，好吃😋"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/canteenListRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>
