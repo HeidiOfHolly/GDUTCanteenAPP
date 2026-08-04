@@ -1,14 +1,21 @@
 package com.example.gdutcanteenapp.ui.home
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gdutcanteenapp.R
+import com.example.gdutcanteenapp.data.local.database.AppDatabase
+import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
 import com.example.gdutcanteenapp.databinding.FragmentHomeBinding
 import com.example.gdutcanteenapp.ui.base.BaseFragment
+import com.example.gdutcanteenapp.ui.profile.FavoriteAdapter
+import com.example.gdutcanteenapp.ui.profile.FavoriteDishItem
 import com.example.gdutcanteenapp.ui.profile.FavoriteFragment
 import com.google.android.material.chip.Chip
 
@@ -17,6 +24,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var isHistoryVisible = false
     private lateinit var historyManager: SearchHistoryManager
     private var backStackListener: FragmentManager.OnBackStackChangedListener? = null
+    private lateinit var viewModel: RecommendViewModel
+    private lateinit var adapter: FavoriteAdapter
+    private var currentItems: List<FavoriteDishItem> = emptyList()
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -37,9 +47,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 binding.historyContainer.visibility = View.GONE
             }
         }
+        val db = AppDatabase.getInstance(requireContext())
+        val repository = CanteenRepositoryImpl(db.canteenDao(), db.favouriteDao(), db.userDao())
+        viewModel = ViewModelProvider(
+            this, RecommendViewModel.Factory(repository)
+        )[RecommendViewModel::class.java]
+
+        adapter = FavoriteAdapter(
+            items = emptyList(),
+            onToggleFavorite = { dishId -> viewModel.toggleFavorite(dishId) }
+        )
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(),2)
-            adapter = this.adapter
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            this.adapter = this@HomeFragment.adapter
         }
 
         // 搜索结果显示时隐藏首页自身的控件，返回（back stack 清空）时恢复。
@@ -51,6 +71,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         updateHomeContentVisibility()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // 切回首页 tab 时刷新收藏状态，避免与其他页面的操作不同步
+        if (::viewModel.isInitialized) {
+            viewModel.refreshFavoriteStates()
+        }
+    }
+
     override fun onDestroyView() {
         backStackListener?.let { childFragmentManager.removeOnBackStackChangedListener(it) }
         backStackListener = null
@@ -58,6 +86,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun observeData() {
+        viewModel.recommendDishes.observe(viewLifecycleOwner) { items ->
+            currentItems = items
+            adapter.submit(items)
+        }
+        viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
+            adapter.submit(currentItems, ids)
+        }
+        viewModel.loadRecommendDishes()
+
         binding.tvSearchBtn.setOnClickListener() {
             val keyword = binding.etSearch.text.toString()
             if (keyword.isEmpty()) {
@@ -113,12 +150,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun createChip(text: String): Chip {
         return Chip(requireContext()).apply {
             setText(text)
+            chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.yellow5))
             isCloseIconVisible = true
             setOnClickListener {
                 binding.etSearch.setText(text)
                 binding.etSearch.setSelection(text.length)
                 isHistoryVisible = false
-                binding.historyContainer.visibility = View.GONE
             }
             setOnCloseIconClickListener {
                 historyManager.removeHistory(text)

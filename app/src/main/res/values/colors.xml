@@ -4,7 +4,16 @@
     <color name="white">#FFFFFFFF</color>
     <color name="yellow1">#F5E6D3</color>
     <color name="yellow2">#FCF5EB</color>
+    <color name="yellow3">#FAEBD7</color>
+    <color name="yellow4">#FFF5E6</color>
+    <color name="yellow5">#FFF8DC</color>
+    <color name="yellow6">#F5F5F0</color>
     <color name="orange1">#EBD2B9</color>
-    <color name="orange2">#A07D69</color>
+    <color name="orange2">#FFD2B4</color>
+    <color name="orang3">#FFE5B4</color>
     <color name="brown">#C3AA91</color>
+    <color name="brown2">#A07D69</color>
+
+
+
 </resources>

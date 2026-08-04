@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/yellow2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:id="@+id/iv_smile"
@@ -79,7 +80,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_remember_pass"
-        android:text="登录" />
+        android:text="登录"
+        android:textSize="20dp"
+        android:backgroundTint="@color/brown2"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

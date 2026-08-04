@@ -40,10 +40,7 @@ class SearchHistoryManager (context: Context) {
         }
     }
 
-    fun clearHistory() {
-        history.edit().remove(KEY_HISTORY).apply()
-        notifyListeners(emptyList())
-    }
+
 
     private fun notifyListeners(history: List<String>) {
         listeners.forEach{

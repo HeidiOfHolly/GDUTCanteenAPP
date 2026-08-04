@@ -133,6 +133,20 @@ class CanteenRepositoryImpl(
         return null
     }
 
+    override suspend fun getTopDishesByFavoriteCount(limit: Int): List<Dish> {
+        try {
+            val response = RetrofitClient.apiService.getTopFavoriteDishes(limit)
+            if (response.isSuccess && response.data != null) {
+                val dishes = response.data.map { it.toDish() }
+                try { canteenDao.insertDishes(dishes) } catch (_: Exception) {}
+                return dishes
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "API getTopFavoriteDishes failed, fallback to local", e)
+        }
+        return canteenDao.getTopDishesByFavoriteCount(limit)
+    }
+
     /**
      * 通过菜名 ID 获取收藏人数。
      *

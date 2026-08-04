@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="10dp"
+    android:background="@color/yellow2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditText
@@ -82,7 +83,8 @@
         app:layout_constraintTop_toBottomOf="@id/login_text"
         android:layout_marginTop="8dp"
         android:text="注册"
-        android:textSize="20dp"/>
+        android:textSize="20dp"
+        android:backgroundTint="@color/brown2"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

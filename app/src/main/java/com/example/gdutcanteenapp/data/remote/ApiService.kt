@@ -94,17 +94,23 @@ interface ApiService {
 
     // ========== 推荐 ==========
 
-    @GET("recommendations/today")
-    suspend fun getTodayRecommendations(
-        @Query("limit") limit: Int = 5
+    @GET("recommendations/popular")
+    suspend fun getTopFavoriteDishes(
+        @Query("limit") limit: Int
     ): ApiResponse<List<DishDto>>
 
-    @GET("recommendations/random")
-    suspend fun getRandomRecommendation(
-        @Query("canteenId") canteenId: Int? = null,
-        @Query("tagIds") tagIds: String? = null,
-        @Query("maxPrice") maxPrice: String? = null
-    ): ApiResponse<DishDto>
+
+//    @GET("recommendations/today")
+//    suspend fun getTodayRecommendations(
+//        @Query("limit") limit: Int = 4
+//    ): ApiResponse<List<DishDto>>
+//
+//    @GET("recommendations/random")
+//    suspend fun getRandomRecommendation(
+//        @Query("canteenId") canteenId: Int? = null,
+//        @Query("tagIds") tagIds: String? = null,
+//        @Query("maxPrice") maxPrice: String? = null
+//    ): ApiResponse<DishDto>
 
     // ========== AI 聊天 ==========
 

@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
 object ChatSseClient {
 
     // SSE 流式端点 URL，对应接口文档 POST /api/v1/chat（响应 Content-Type: text/event-stream）
-    private const val CHAT_STREAM_URL = "http://47.113.224.195:32502/api/chat"
+    private const val CHAT_STREAM_URL = "http://47.113.224.195:32503/api/chat"
 
     private val gson = Gson()
 

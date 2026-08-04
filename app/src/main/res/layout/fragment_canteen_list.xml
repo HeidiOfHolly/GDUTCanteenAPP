@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_canteen_list"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/yellow2">
 
     <TextView
         android:id="@+id/titleTv"
