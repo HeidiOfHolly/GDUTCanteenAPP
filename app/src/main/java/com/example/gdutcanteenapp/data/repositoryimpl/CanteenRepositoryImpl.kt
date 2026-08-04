@@ -264,6 +264,8 @@ class CanteenRepositoryImpl(
             RetrofitClient.apiService.login(
                 LoginRequest(studentNo = account, password = password)
             )
+        } catch (e: HttpException) {
+            throw toLoginError(e)
         } catch (e: Exception) {
             throw Exception("网络异常，请稍后重试")
         }
@@ -272,6 +274,21 @@ class CanteenRepositoryImpl(
             return response.data
         }
         throw Exception("学号或密码错误")
+    }
+
+    private fun toLoginError(e: HttpException): Exception {
+        val errorBody = e.response()?.errorBody()?.string()
+        if (errorBody != null) {
+            try {
+                val json = JSONObject(errorBody)
+                val message = json.optString("message").ifEmpty { "" }
+                return when (json.optInt("code")) {
+                    40001 , 40002 -> Exception("账号或密码错误")
+                    else -> Exception(message.ifEmpty { "账号或密码错误" })
+                }
+            } catch (_: Exception) {}
+        }
+        return Exception("账号或密码错误")
     }
 
     override suspend fun register(account: String, username: String, password: String): String {

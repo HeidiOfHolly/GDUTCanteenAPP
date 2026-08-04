@@ -45,7 +45,6 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
 
         listAdapter = DishListAdapter(
             data = emptyList(),
-            canteenName = canteenName,
             onToggleFavorite = { dishId -> viewModel.toggleFavorite(dishId) }
         )
         binding.rvBrowse.apply {

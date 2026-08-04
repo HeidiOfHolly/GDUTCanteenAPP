@@ -11,7 +11,6 @@ import com.example.gdutcanteenapp.databinding.DishWindowBinding
 // 窗口卡片纵向列表适配器
 class DishListAdapter(
     private var data: List<Pair<Window, List<Dish>>>,
-    private val canteenName: String,
     private var favoriteDishIds: Set<Int> = emptySet(),
     private var onToggleFavorite: (Int) -> Unit = {}
 ) : RecyclerView.Adapter<DishListAdapter.WindowViewHolder>() {
@@ -65,5 +64,4 @@ class DishListAdapter(
         windowAdapters.values.forEach { it.updateFavorites(newFavoriteIds) }
     }
 
-    fun currentData(): List<Pair<Window, List<Dish>>> = data
 }

@@ -2,6 +2,7 @@ package com.example.gdutcanteenapp.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
@@ -53,6 +54,9 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
     }
 
     override fun observeData() {
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+        }
         viewModel.favoriteItems.observe(viewLifecycleOwner) { items ->
             currentItems = items
             adapter.submit(items)

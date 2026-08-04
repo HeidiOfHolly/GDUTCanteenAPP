@@ -2,6 +2,7 @@ package com.example.gdutcanteenapp.ui.canteen.canteenlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,11 +21,6 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
     }
 
     override fun initViews() {
-        if(viewModel.isLoading.value == true) {
-            binding.progressBar.visibility = android.view.View.VISIBLE
-        } else {
-            binding.progressBar.visibility = android.view.View.GONE
-        }
         binding.canteenListRv.layoutManager = LinearLayoutManager(requireContext())
         adapter = CanteenListAdapter(onItemClick = { canteen ->
             val bundle = Bundle().apply { putInt("canteen_id", canteen.canteenId)
@@ -38,6 +34,9 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
     }
 
     override fun observeData() {
+        viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+            binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+        }
         viewModel.canteenList.observe(viewLifecycleOwner) { canteens ->
             adapter.submitList(canteens)
         }

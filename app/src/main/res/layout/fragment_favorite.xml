@@ -26,6 +26,7 @@
             android:layout_marginLeft="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/iv_back"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_back" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

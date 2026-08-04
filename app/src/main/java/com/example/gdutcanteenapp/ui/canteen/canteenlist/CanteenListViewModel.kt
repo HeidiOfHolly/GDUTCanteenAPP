@@ -34,9 +34,12 @@ class CanteenListViewModel(application: Application) : AndroidViewModel(applicat
     private fun loadCanteens() {
         viewModelScope.launch {
             _isLoading.value = true
-            repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
-            _canteenList.value = repository.getAllCanteens()
-            _isLoading.value = false
+            try {
+                repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
+                _canteenList.value = repository.getAllCanteens()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }
