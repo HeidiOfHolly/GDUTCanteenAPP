@@ -44,12 +44,14 @@
                     android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="20sp"
                     android:text="用户昵称:伟大的王国供应商安妮" />
 
                 <TextView
                     android:id="@+id/user_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="20sp"
                     android:text="用户账号:annibumaijiaqiu" />
 
             </LinearLayout>
@@ -62,6 +64,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
         android:text="我的收藏"
+        android:textSize="25sp"
         android:textColor="@color/black"/>
 
     <View
@@ -73,6 +76,7 @@
         android:id="@+id/log_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="25sp"
         android:text="退出登录"
         android:layout_gravity="center"/>
 

@@ -22,7 +22,8 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
     override fun initViews() {
         binding.canteenListRv.layoutManager = LinearLayoutManager(requireContext())
         adapter = CanteenListAdapter(onItemClick = { canteen ->
-            val bundle = Bundle().apply { putInt("canteen_id", canteen.canteenId) }
+            val bundle = Bundle().apply { putInt("canteen_id", canteen.canteenId)
+            putString("canteen_name", canteen.canteenName) }
             findNavController().navigate(
                 R.id.action_fragment_canteen_list_to_fragment_dish_list,
                 bundle

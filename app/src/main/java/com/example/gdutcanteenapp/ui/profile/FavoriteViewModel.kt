@@ -1,13 +1,12 @@
 package com.example.gdutcanteenapp.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.gdutcanteenapp.data.local.mock.MockDataProvider
 import com.example.gdutcanteenapp.data.model.FavoriteDish
-import com.example.gdutcanteenapp.data.model.User
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
 import com.example.gdutcanteenapp.data.remote.TokenManager
 import kotlinx.coroutines.launch
@@ -35,8 +34,6 @@ class FavoriteViewModel(
 
     fun searchDishes(keyword: String) {
         viewModelScope.launch {
-            ensureSeeded()
-            ensureDefaultUser()
             val dishes = repository.searchDishes(keyword)
             _favoriteItems.value = dishes.map { dish ->
                 val window = repository.getWindowById(dish.windowId)
@@ -56,38 +53,47 @@ class FavoriteViewModel(
 
     fun load() {
         viewModelScope.launch {
-            ensureSeeded()
-            ensureDefaultUser()
-            val dishIds = repository.getFavoriteDishIds(TokenManager.getUserId())
-            _favoriteDishIds.value = dishIds.toSet()
-            if (dishIds.isEmpty()) {
-                _favoriteItems.value = emptyList()
-                return@launch
-            }
-            var dishes = repository.getDishesByIds(dishIds)
-            val cachedIds = dishes.map { it.dishId }.toSet()
-            val missingIds = dishIds.filterNot { it in cachedIds }
-            // 本地没缓存到的收藏菜品（写入时外键约束被静默吞掉等），从 API 补拉，保证收藏列表有内容
-            if (missingIds.isNotEmpty()) {
-                val fetched = missingIds.mapNotNull { repository.getDishDetail(it) }
-                if (fetched.isNotEmpty()) {
-                    repository.insertDishes(fetched)
-                    dishes = dishes + fetched
+            try {
+                val dishIds = repository.getFavoriteDishIds(TokenManager.getUserId())
+                _favoriteDishIds.value = dishIds.toSet()
+                if (dishIds.isEmpty()) {
+                    _favoriteItems.value = emptyList()
+                    return@launch
                 }
+                // 先确保窗口/食堂缓存到本地：insertDishes 对窗口有外键约束，窗口缺失会抛
+                // FOREIGN KEY constraint failed 导致闪退；补上后也能展示窗口名和食堂名
+                ensureSeeded()
+                var dishes = repository.getDishesByIds(dishIds)
+                val cachedIds = dishes.map { it.dishId }.toSet()
+                val missingIds = dishIds.filterNot { it in cachedIds }
+                // 本地没缓存到的收藏菜品（写入时外键约束被静默吞掉等），从 API 补拉，保证收藏列表有内容
+                if (missingIds.isNotEmpty()) {
+                    val fetched = missingIds.mapNotNull { repository.getDishDetail(it) }
+                    if (fetched.isNotEmpty()) {
+                        try {
+                            repository.insertDishes(fetched)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "insertDishes failed, 仅内存展示", e)
+                        }
+                        dishes = dishes + fetched
+                    }
+                }
+                val items = dishes.map { dish ->
+                    val window = repository.getWindowById(dish.windowId)
+                    val canteen = window?.let { repository.getCanteenById(it.canteenId) }
+                    FavoriteDishItem(
+                        dishId = dish.dishId,
+                        dishName = dish.dishName,
+                        dishPrice = dish.dishPrice,
+                        dishTags = formatTags(dish.dishTags),
+                        windowName = window?.windowName ?: "",
+                        canteenName = canteen?.canteenName ?: ""
+                    )
+                }
+                _favoriteItems.value = items
+            } catch (e: Exception) {
+                Log.w(TAG, "load favorites failed", e)
             }
-            val items = dishes.map { dish ->
-                val window = repository.getWindowById(dish.windowId)
-                val canteen = window?.let { repository.getCanteenById(it.canteenId) }
-                FavoriteDishItem(
-                    dishId = dish.dishId,
-                    dishName = dish.dishName,
-                    dishPrice = dish.dishPrice,
-                    dishTags = formatTags(dish.dishTags),
-                    windowName = window?.windowName ?: "",
-                    canteenName = canteen?.canteenName ?: ""
-                )
-            }
-            _favoriteItems.value = items
         }
     }
 
@@ -113,23 +119,13 @@ class FavoriteViewModel(
     private suspend fun ensureSeeded() {
         if (seeded) return
         val canteens = repository.getAllCanteens()
-        if (canteens.isEmpty()) {
-            // API 不可用：灌入本地 mock 数据
-            repository.insertCanteens(MockDataProvider.getMockCanteens())
-            repository.insertWindows(MockDataProvider.getMockWindows())
-            repository.insertDishes(MockDataProvider.getMockDishes())
-        } else {
-            // API 可用：把每个食堂的窗口缓存到本地，搜索结果的菜品才能解析出窗口名和食堂名
-            canteens.forEach { canteen ->
-                repository.getWindowsByCanteen(canteen.canteenId)
-            }
+        canteens.forEach { canteen ->
+            repository.getWindowsByCanteen(canteen.canteenId)
+
         }
         seeded = true
     }
 
-    private suspend fun ensureDefaultUser() {
-        repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
-    }
 
     private fun formatTags(raw: String): String {
         return raw.trim()
@@ -147,5 +143,9 @@ class FavoriteViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return FavoriteViewModel(repository) as T
         }
+    }
+
+    companion object {
+        private const val TAG = "FavoriteVM"
     }
 }

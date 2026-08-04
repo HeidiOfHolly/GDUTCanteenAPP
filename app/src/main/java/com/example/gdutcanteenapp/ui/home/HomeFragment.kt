@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gdutcanteenapp.R
 import com.example.gdutcanteenapp.databinding.FragmentHomeBinding
@@ -15,6 +16,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private var isHistoryVisible = false
     private lateinit var historyManager: SearchHistoryManager
+    private var backStackListener: FragmentManager.OnBackStackChangedListener? = null
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -39,6 +41,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             layoutManager = GridLayoutManager(requireContext(),2)
             adapter = this.adapter
         }
+
+        // 搜索结果显示时隐藏首页自身的控件，返回（back stack 清空）时恢复。
+        // 用监听器而非 onResume：替换进来的 Fragment 与 HomeFragment 同生命周期，返回时 onResume 不会触发。
+        backStackListener = FragmentManager.OnBackStackChangedListener {
+            updateHomeContentVisibility()
+        }
+        childFragmentManager.addOnBackStackChangedListener(backStackListener!!)
+        updateHomeContentVisibility()
+    }
+
+    override fun onDestroyView() {
+        backStackListener?.let { childFragmentManager.removeOnBackStackChangedListener(it) }
+        backStackListener = null
+        super.onDestroyView()
     }
 
     override fun observeData() {
@@ -49,12 +65,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             } else {
                 historyManager.addHistory(keyword)
                 val favoriteFragment = FavoriteFragment.newInstanceByKeyword(keyword)
-                parentFragmentManager.beginTransaction()
+                // 必须用 childFragmentManager 而非 parentFragmentManager：
+                // ViewPager2 切页只限制它管理的 tab Fragment（HomeFragment）到 STARTED，
+                // 挂在 Activity FragmentManager 上的子 Fragment 不受限，切走时不会进 onPause，
+                // 切回时 onResume 不触发，搜索结果列表不会刷新。
+                // 用 childFragmentManager 后子 Fragment 生命周期跟随 HomeFragment，切回即刷新。
+                childFragmentManager.beginTransaction()
                     .replace(R.id.home_container, favoriteFragment)
                     .addToBackStack(null)
                     .commit()
             }
         }
+    }
+
+    // 首页控件在搜索结果页打开时隐藏，back stack 清空后恢复，让结果页覆盖整屏
+    private fun updateHomeContentVisibility() {
+        val searchShowing = childFragmentManager.backStackEntryCount > 0
+        binding.toolbar.visibility = if (searchShowing) View.GONE else View.VISIBLE
+        binding.ivDish.visibility = if (searchShowing) View.GONE else View.VISIBLE
+        binding.tvRecommend.visibility = if (searchShowing) View.GONE else View.VISIBLE
+        binding.recyclerView.visibility = if (searchShowing) View.GONE else View.VISIBLE
+        // historyContainer 始终保持初始的隐藏状态，避免搜索结果页残留历史面板
+        binding.historyContainer.visibility = View.GONE
     }
 
     private fun showHistory() {

@@ -72,6 +72,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
                 viewModel.load()
             }
         }
+
     }
 
     companion object {
