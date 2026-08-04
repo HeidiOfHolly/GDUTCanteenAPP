@@ -1,9 +1,9 @@
 package com.example.gdutcanteenapp.ui.chat
 
+import android.app.Application
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.gdutcanteenapp.data.model.Msg
 import com.example.gdutcanteenapp.data.remote.ChatSseClient
@@ -13,6 +13,9 @@ import com.example.gdutcanteenapp.data.remote.dto.ChatSessionRequest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import com.example.gdutcanteenapp.data.remote.TokenManager
+import com.google.gson.Gson
 import java.util.UUID
 
 /**
@@ -41,9 +44,12 @@ import java.util.UUID
  * 3. 流结束 → Flow 自动 close，isSending = false
  * 4. 异常 → 移除思考占位，追加错误提示消息
  */
-class ChatViewModel : ViewModel() {
+class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _messages = MutableLiveData<List<Msg>>(emptyList())
+    private val prefs = application.getSharedPreferences("chat_history", Context.MODE_PRIVATE)
+
+    private val _messages = MutableLiveData<List<Msg>>(loadMessages())
+
     val messages: LiveData<List<Msg>> = _messages
 
     private val _isSending = MutableLiveData(false)
@@ -78,7 +84,7 @@ class ChatViewModel : ViewModel() {
 
         // 2. 添加思考中占位
         currentList.add(Msg(content = "", type = Msg.TYPE_THINKING))
-        _messages.value = currentList.toList()
+        updateMessages(currentList.toList())
         _isSending.value = true
 
         // 3. 发起请求
@@ -107,7 +113,7 @@ class ChatViewModel : ViewModel() {
                             updated.removeAt(thinkingIdx)
                             updated.add(Msg(content = "", type = Msg.TYPE_RECEIVED))
                             aiMsgInserted = true
-                            _messages.value = updated.toList()
+                            updateMessages(updated.toList())
                         }
                     }
 
@@ -117,7 +123,7 @@ class ChatViewModel : ViewModel() {
                     val aiIdx = updated.indexOfLast { it.type == Msg.TYPE_RECEIVED }
                     if (aiIdx >= 0) {
                         updated[aiIdx] = updated[aiIdx].copy(content = aiContent.toString())
-                        _messages.value = updated.toList()
+                        updateMessages(updated.toList())
                     }
                 }
             } catch (e: Exception) {
@@ -139,7 +145,7 @@ class ChatViewModel : ViewModel() {
                         type = Msg.TYPE_RECEIVED
                     )
                 )
-                _messages.value = updated.toList()
+                updateMessages(updated.toList())
             } finally {
                 _isSending.value = false
             }
@@ -175,11 +181,24 @@ class ChatViewModel : ViewModel() {
         cancelStream()
     }
 
-    /** Factory — 无外部依赖，直接实例化（参考项目中 CanteenListViewModel 的模式） */
-    class Factory : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ChatViewModel() as T
-        }
+    private fun loadMessages() : List<Msg>{
+        val key = "chat_history_${TokenManager.getUserId()}"
+        val json = prefs.getString(key,"[]") ?: return emptyList()
+        return runCatching {
+            Gson().fromJson(json, Array<Msg>::class.java).toList()
+        }.getOrDefault(emptyList())
     }
+
+    private fun updateMessages(list: List<Msg>) {
+        _messages.value = list
+        persistMessages()
+    }
+
+    private fun persistMessages() {
+        val key = "chat_history_${TokenManager.getUserId()}"
+        // 过滤掉「正在思考…」占位，那是临时状态，不该进历史
+        val history = _messages.value.orEmpty().filter { it.type != Msg.TYPE_THINKING }
+        prefs.edit().putString(key, Gson().toJson(history)).apply()
+    }
+
 }

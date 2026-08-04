@@ -30,8 +30,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
 
     override fun initViews() {
         // ViewModel — 使用 Factory 模式（与项目其他 ViewModel 一致）
-        viewModel = ViewModelProvider(this, ChatViewModel.Factory())[ChatViewModel::class.java]
-
+        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         // RecyclerView：从底部开始堆叠（聊天界面标准行为）
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.stackFromEnd = true
