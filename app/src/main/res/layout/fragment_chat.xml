@@ -29,7 +29,7 @@
     <LinearLayout
         android:id="@+id/input_bar"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="8dp"
@@ -40,11 +40,11 @@
         <EditText
             android:id="@+id/et_input"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="8dp"
             android:background="@drawable/frame2"
-
+            android:layout_marginVertical="5dp"
             android:gravity="top|start"
             android:hint="唔知食咩？嚟问我啦~"
             android:inputType="textMultiLine"
