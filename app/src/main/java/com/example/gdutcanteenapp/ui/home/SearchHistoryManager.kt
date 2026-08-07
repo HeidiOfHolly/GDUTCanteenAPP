@@ -13,7 +13,7 @@ interface HistoryChangeListener {
 class SearchHistoryManager (context: Context) {
     private val appContext = context.applicationContext
     private val KEY_HISTORY = "history"
-    private val MAX_SIZE = 5
+    private val MAX_SIZE = 10
     private val listeners = mutableListOf<HistoryChangeListener>()
 
     // 按当前登录用户隔离搜索历史，切换账号后各自持有独立的搜索历史
