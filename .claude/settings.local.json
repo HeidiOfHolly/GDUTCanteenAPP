@@ -9,7 +9,11 @@
       "PowerShell(& \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\gradlew.bat\" assembleDebug)",
       "WebFetch(domain:s.apifox.cn)",
       "WebSearch",
-      "PowerShell(adb shell *)"
+      "PowerShell(adb shell *)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\app\\\\src\\\\main\\\\java\\\\com\\\\example\\\\gdutcanteenapp\" -Recurse -Directory | Select-Object FullName | ForEach-Object { $_.FullName -replace [regex]::Escape\\(\"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\app\\\\src\\\\main\\\\java\\\\com\\\\example\\\\gdutcanteenapp\\\\\"\\), '' })",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\app\\\\src\\\\main\\\\res\" -Recurse -Directory | ForEach-Object { $_.FullName -replace [regex]::Escape\\(\"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\app\\\\src\\\\main\\\\\"\\), '' })",
+      "PowerShell($wrapperUrl = \"https://raw.githubusercontent.com/gradle/gradle/v8.13.0/gradle/wrapper/gradle-wrapper.jar\"; $outputPath = \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\gradle\\\\wrapper\\\\gradle-wrapper.jar\"; try { Invoke-WebRequest -Uri $wrapperUrl -OutFile $outputPath -ErrorAction Stop; \"Downloaded successfully\" } catch { \"Download failed: $_\" })",
+      "PowerShell($jar = Get-Item \"D:\\\\Android Studio\\\\GDUTCanteenApp\\\\gradle\\\\wrapper\\\\gradle-wrapper.jar\"; \"Size: $\\($jar.Length\\) bytes\"; cd \"D:\\\\Android Studio\\\\GDUTCanteenApp\"; ./gradlew assembleDebug 2>&1 | Select-Object -Last 30)"
     ]
   }
 }

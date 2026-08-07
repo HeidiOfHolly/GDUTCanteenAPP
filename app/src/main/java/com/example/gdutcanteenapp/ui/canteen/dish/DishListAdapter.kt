@@ -30,6 +30,7 @@ class DishListAdapter(
     }
 
     override fun onBindViewHolder(holder: WindowViewHolder, position: Int) {
+        //position是recyclerview自动传的参数 告诉你当前item在数据列表里的位置
         val (window, dishes) = data[position]
         holder.binding.windowName.text = window.windowName
 

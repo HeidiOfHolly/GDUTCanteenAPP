@@ -98,7 +98,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 val request = ChatRequest(
                     sessionId = sessionId,
                     message = content.trim(),
-                    clientMessageId = UUID.randomUUID().toString()
+                    clientMessageId = UUID.randomUUID().toString()//一个随机的字符串不会重复
                 )
 
                 val aiContent = StringBuilder()

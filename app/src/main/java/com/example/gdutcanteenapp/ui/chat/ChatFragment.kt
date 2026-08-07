@@ -1,6 +1,7 @@
 package com.example.gdutcanteenapp.ui.chat
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,6 +58,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
             lastItemCount = totalItems
 
             adapter.submitList(messages)
+            binding.tvChatWelcome.visibility = if (totalItems == 0) View.VISIBLE else View.GONE
 
             if (totalItems == 0) return@observe
 

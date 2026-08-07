@@ -38,6 +38,7 @@ class DishListViewModel(
     fun toggleFavorite(dishId: Int) {
         viewModelScope.launch {
             val current = _favoriteDishIds.value ?: emptySet()
+            //判断菜品是不是在收藏里面·
             if (dishId in current) {
                 repository.deleteFavorite(TokenManager.getUserId(), dishId)
             } else {

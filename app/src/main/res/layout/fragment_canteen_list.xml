@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="食堂"
-            android:textSize="35sp"
+            android:textSize="28sp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"/>
 
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="窝工的食堂，好吃😋"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_marginLeft="10dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -38,5 +38,55 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/emptyStateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="暂无食堂数据"
+            android:textSize="16sp"
+            android:textColor="#999999"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="下拉刷新试试"
+            android:textSize="13sp"
+            android:textColor="#CCCCCC" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/errorStateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载失败"
+            android:textSize="16sp"
+            android:textColor="#999999" />
+
+        <Button
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="重试"
+            android:textSize="14sp"
+            android:backgroundTint="@color/brown2" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="正在思考…"
             android:textColor="#888888"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 
 </FrameLayout>
