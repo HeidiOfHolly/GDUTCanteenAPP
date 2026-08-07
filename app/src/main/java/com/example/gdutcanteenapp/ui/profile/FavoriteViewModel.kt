@@ -35,28 +35,38 @@ class FavoriteViewModel(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _isError = MutableLiveData(false)
+    val isError: LiveData<Boolean> get() = _isError
+
     fun searchDishes(keyword: String) {
+        _isError.value = false
         viewModelScope.launch {
-            // 先缓存窗口/食堂，否则搜索结果里的窗口名、食堂名会因本地无数据而空白
-            ensureSeeded()
-            val dishes = repository.searchDishes(keyword)
-            _favoriteItems.value = dishes.map { dish ->
-                val window = repository.getWindowById(dish.windowId)
-                val canteen = window?.let { repository.getCanteenById(it.canteenId) }
-                FavoriteDishItem(
-                    dishId = dish.dishId,
-                    dishName = dish.dishName,
-                    dishPrice = dish.dishPrice,
-                    dishTags = formatTags(dish.dishTags),
-                    windowName = window?.windowName ?: "",
-                    canteenName = canteen?.canteenName ?: ""
-                )
+            try {
+                // 先缓存窗口/食堂，否则搜索结果里的窗口名、食堂名会因本地无数据而空白
+                ensureSeeded()
+                val dishes = repository.searchDishes(keyword)
+                _favoriteItems.value = dishes.map { dish ->
+                    val window = repository.getWindowById(dish.windowId)
+                    val canteen = window?.let { repository.getCanteenById(it.canteenId) }
+                    FavoriteDishItem(
+                        dishId = dish.dishId,
+                        dishName = dish.dishName,
+                        dishPrice = dish.dishPrice,
+                        dishTags = formatTags(dish.dishTags),
+                        windowName = window?.windowName ?: "",
+                        canteenName = canteen?.canteenName ?: ""
+                    )
+                }
+                _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
+            } catch (e: Exception) {
+                Log.w(TAG, "searchDishes failed", e)
+                _isError.value = true
             }
-            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 
     fun load() {
+        _isError.value = false
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -99,6 +109,7 @@ class FavoriteViewModel(
                 _favoriteItems.value = items
             } catch (e: Exception) {
                 Log.w(TAG, "load favorites failed", e)
+                _isError.value = true
             }
             finally {
                 _isLoading.value = false}

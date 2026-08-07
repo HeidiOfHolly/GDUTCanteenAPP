@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="个人中心"
-        android:textSize="35sp"
+        android:textSize="28sp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"/>
     <TextView
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="没错，下面这个就是你"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:layout_marginLeft="10dp"/>
 
 
@@ -45,50 +45,60 @@
                     android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:text="用户昵称:伟大的王国供应商安妮" />
 
                 <TextView
                     android:id="@+id/user_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:text="用户账号:annibumaijiaqiu" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/user_like"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="8dp"
+        android:padding="14dp"
         android:text="我的收藏"
-        android:textSize="25sp"
-        android:textColor="@color/black"/>
+        android:textSize="16sp"
+        android:textFontWeight="500"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/delete_chat"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp"
+        android:padding="14dp"
         android:text="清空所有聊天历史"
-        android:textSize="25sp"
-        android:textColor="@color/black"/>
+        android:textSize="16sp"
+        android:textFontWeight="500"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/log_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="12dp"
+        android:padding="14dp"
+        android:textSize="16sp"
         android:text="退出登录"
         android:backgroundTint="@color/brown2"
+        android:textFontWeight="500"
         android:layout_gravity="center"/>
 
 </LinearLayout>

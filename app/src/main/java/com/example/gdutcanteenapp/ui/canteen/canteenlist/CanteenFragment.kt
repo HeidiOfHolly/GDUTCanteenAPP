@@ -8,9 +8,9 @@ import com.example.gdutcanteenapp.ui.base.BaseFragment
 //作为navigation的容器
 class CanteenFragment : BaseFragment<FragmentCanteenBinding>() {
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCanteenBinding {
-        return FragmentCanteenBinding.inflate(inflater, container, false)
-    }
+        override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCanteenBinding {
+            return FragmentCanteenBinding.inflate(inflater, container, false)
+        }
 
     override fun initViews() {
     }

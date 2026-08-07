@@ -39,4 +39,39 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/tvEmptyFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="还没有收藏，去逛逛吧~"
+        android:textSize="16sp"
+        android:textColor="#999999"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载失败，请检查网络"
+            android:textSize="16sp"
+            android:textColor="#999999" />
+
+        <Button
+            android:id="@+id/btnRetryFavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="重试"
+            android:textSize="14sp"
+            android:backgroundTint="@color/brown2" />
+    </LinearLayout>
+
 </FrameLayout>

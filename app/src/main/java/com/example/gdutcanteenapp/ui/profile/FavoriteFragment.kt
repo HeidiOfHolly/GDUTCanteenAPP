@@ -49,6 +49,14 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             adapter = this@FavoriteFragment.adapter
         }
 
+        binding.btnRetryFavorite.setOnClickListener {
+            val keyword = arguments?.getString(ARG_KEYWORD)
+            if (!keyword.isNullOrEmpty()) {
+                viewModel.searchDishes(keyword)
+            } else {
+                viewModel.load()
+            }
+        }
     }
 
     override fun observeData() {
@@ -58,6 +66,9 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
         viewModel.favoriteItems.observe(viewLifecycleOwner) { items ->
             currentItems = items
             adapter.submit(items)
+            val isEmpty = items.isEmpty()
+            binding.tvEmptyFavorite.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
             // 搜索模式（带 keyword）下结果为空 → 弹窗引导返回首页；收藏页（无 keyword）不提示
             val keyword = arguments?.getString(ARG_KEYWORD)
             if (!keyword.isNullOrEmpty() && items.isEmpty()) {
@@ -66,6 +77,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
         }
         viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
             adapter.submit(currentItems, ids)
+        }
+        viewModel.isError.observe(viewLifecycleOwner) { isError ->
+            binding.errorContainer.visibility = if (isError) View.VISIBLE else View.GONE
+            binding.tvEmptyFavorite.visibility = View.GONE
         }
     }
 

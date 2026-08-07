@@ -26,17 +26,22 @@ class CanteenListViewModel(application: Application) : AndroidViewModel(applicat
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _isError = MutableLiveData(false)
+    val isError: LiveData<Boolean> get() = _isError
 
     init {
         loadCanteens()
     }
 
-    private fun loadCanteens() {
+    fun loadCanteens() {
+        _isError.value = false
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 repository.insertUser(User(userId = TokenManager.getUserId(), userName = TokenManager.getUserName(), userAccount = TokenManager.getUserId(), userPassword = ""))
                 _canteenList.value = repository.getAllCanteens()
+            } catch (e: Exception) {
+                _isError.value = true
             } finally {
                 _isLoading.value = false
             }

@@ -31,6 +31,7 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
             )
         })
         binding.canteenListRv.adapter = adapter
+        binding.btnRetry.setOnClickListener { viewModel.loadCanteens() }
     }
 
     override fun observeData() {
@@ -39,6 +40,13 @@ class CanteenListFragment : BaseFragment<FragmentCanteenListBinding>() {
         }
         viewModel.canteenList.observe(viewLifecycleOwner) { canteens ->
             adapter.submitList(canteens)
+            val isEmpty = canteens.isEmpty()
+            binding.emptyStateContainer.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.canteenListRv.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        }
+        viewModel.isError.observe(viewLifecycleOwner) { isError ->
+            binding.errorStateContainer.visibility = if (isError) View.VISIBLE else View.GONE
+            binding.emptyStateContainer.visibility = View.GONE
         }
     }
 }

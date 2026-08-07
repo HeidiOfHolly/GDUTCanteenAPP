@@ -2,6 +2,7 @@ package com.example.gdutcanteenapp.ui.canteen.dish
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -65,6 +66,9 @@ class DishListFragment : BaseFragment<DishBrowseBinding>() {
     override fun observeData() {
         viewModel.windowsWithDishes.observe(viewLifecycleOwner) { data ->
             listAdapter.submit(data)
+            val isEmpty = data.isEmpty()
+            binding.tvEmptyBrowse.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.rvBrowse.visibility = if (isEmpty) View.GONE else View.VISIBLE
         }
         viewModel.favoriteDishIds.observe(viewLifecycleOwner) { ids ->
             listAdapter.updateFavorites(ids)

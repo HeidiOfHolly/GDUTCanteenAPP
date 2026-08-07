@@ -16,4 +16,14 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingVertical="4dp" />
+
+    <TextView
+        android:id="@+id/tvEmptyBrowse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="该窗口暂无菜品"
+        android:textSize="16sp"
+        android:textColor="#999999"
+        android:gravity="center"
+        android:visibility="gone" />
 </LinearLayout>

@@ -43,7 +43,7 @@
                 android:gravity="center"
                 android:textColor="#333333"
                 android:textColorHint="#999999"
-                android:textSize="23sp"
+                android:textSize="16sp"
                 android:maxLines="1"
                 android:inputType="text" />
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="搜索"
-                android:textSize="23sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -59,9 +59,8 @@
     <LinearLayout
         android:id="@+id/historyContainer"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:src="@drawable/frame"
         android:background="@color/white"
         android:elevation="8dp"
         android:orientation="vertical"
@@ -78,7 +77,7 @@
             android:layout_height="wrap_content"
             android:text="最近搜索"
             android:textStyle="bold"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
@@ -91,9 +90,11 @@
 
     <ImageView
         android:id="@+id/iv_dish"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -102,7 +103,7 @@
     <TextView
         android:id="@+id/tv_recommend"
         android:text="为你推荐"
-        android:textSize="25sp"
+        android:textSize="22sp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
