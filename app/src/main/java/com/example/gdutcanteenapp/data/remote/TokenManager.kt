@@ -1,15 +1,29 @@
 package com.example.gdutcanteenapp.data.remote
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Base64
 import android.util.Log
 import org.json.JSONObject
 
 object TokenManager {
     private const val TAG = "TokenManager"
+    private const val PREFS_NAME = "auth_session"
 
     private var token: String? = null
     private var userId: String? = null
     private var userName: String? = null
+    private var prefs: SharedPreferences? = null
+
+    @Synchronized
+    fun initialize(context: Context) {
+        if (prefs != null) return
+        prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        token = prefs?.getString("token", null)
+        userId = prefs?.getString("userId", null)
+        userName = prefs?.getString("userName", null)
+        Log.d(TAG, "initialize: isLoggedIn=$isLoggedIn, userId=$userId")
+    }
 
     fun setToken(token: String?, loginAccount: String? = null, loginName: String? = null) {
         this.token = token
@@ -19,7 +33,6 @@ object TokenManager {
             userId = null
             userName = null
         }
-        // 如果 JWT 解析没拿到 userId，用登录时填的学号兜底
         if (userId == null && loginAccount != null) {
             userId = loginAccount
             Log.d(TAG, "JWT 解析失败，降级使用登录学号: $loginAccount")
@@ -27,6 +40,11 @@ object TokenManager {
         if (userName == null && loginName != null) {
             userName = loginName
         }
+        prefs?.edit()?.apply {
+            putString("token", this@TokenManager.token)
+            putString("userId", this@TokenManager.userId)
+            putString("userName", this@TokenManager.userName)
+        }?.apply()
         Log.d(TAG, "setToken: userId=$userId, userName=$userName")
     }
 
@@ -38,6 +56,7 @@ object TokenManager {
         token = null
         userId = null
         userName = null
+        prefs?.edit()?.clear()?.apply()
     }
 
     val isLoggedIn: Boolean get() = token != null

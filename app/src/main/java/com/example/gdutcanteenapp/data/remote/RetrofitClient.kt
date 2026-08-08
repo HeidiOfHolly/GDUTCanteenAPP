@@ -23,7 +23,9 @@ object RetrofitClient {
         } else {
             request
         }
-        chain.proceed(newRequest)
+        val response = chain.proceed(newRequest)
+        if (response.code == 401) TokenManager.clearToken()
+        response
     }
 
     private val okHttpClient: OkHttpClient by lazy {

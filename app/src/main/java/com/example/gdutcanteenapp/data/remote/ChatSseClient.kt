@@ -57,7 +57,9 @@ object ChatSseClient {
                     val newRequest = request.newBuilder()
                         .header("Authorization", "Bearer $token")
                         .build()
-                    chain.proceed(newRequest)
+                    val response = chain.proceed(newRequest)
+                    if (response.code == 401) TokenManager.clearToken()
+                    response
                 } else {
                     chain.proceed(request)
                 }

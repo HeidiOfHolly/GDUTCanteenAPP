@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.gdutcanteenapp.MainActivity
 import com.example.gdutcanteenapp.R
+import com.example.gdutcanteenapp.data.remote.TokenManager
 import com.example.gdutcanteenapp.data.local.database.AppDatabase
 import com.example.gdutcanteenapp.data.repositoryimpl.CanteenRepositoryImpl
 import com.example.gdutcanteenapp.databinding.ActivityLoginBinding
@@ -14,6 +15,8 @@ import com.example.gdutcanteenapp.databinding.DialogRegistrationBinding
 import com.example.gdutcanteenapp.ui.base.BaseActivity
 
 class LoginActivity : BaseActivity<ActivityLoginBinding>() {
+
+    override val isLoginPage: Boolean get() = true
 
     private lateinit var viewModel: RegistrationViewModel
     private var registerDialog: Dialog? = null
@@ -25,6 +28,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
     override fun initViews() {
+        TokenManager.initialize(this)
+        if (TokenManager.isLoggedIn) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         val repository = CanteenRepositoryImpl(
             AppDatabase.getInstance(this).canteenDao(),
             AppDatabase.getInstance(this).favouriteDao(),
