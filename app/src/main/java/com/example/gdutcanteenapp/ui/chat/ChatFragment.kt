@@ -3,6 +3,8 @@ package com.example.gdutcanteenapp.ui.chat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gdutcanteenapp.databinding.FragmentChatBinding
@@ -47,6 +49,21 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
                 viewModel.sendMessage(text)
                 binding.etInput.text?.clear()
             }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottomPadding = if (ime.bottom > 0) {
+                val loc = IntArray(2)
+                v.getLocationInWindow(loc)
+                val viewBottom = loc[1] + v.height
+                val gapBelow = maxOf(0, v.rootView.height - viewBottom)
+                maxOf(0, ime.bottom - gapBelow)
+            } else {
+                0
+            }
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, bottomPadding)
+            insets
         }
     }
 
