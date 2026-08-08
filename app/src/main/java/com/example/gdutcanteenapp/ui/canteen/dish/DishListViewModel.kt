@@ -12,6 +12,8 @@ import com.example.gdutcanteenapp.data.model.Window
 import com.example.gdutcanteenapp.data.repository.CanteenRepository
 import com.example.gdutcanteenapp.data.remote.TokenManager
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class DishListViewModel(
     private val repository: CanteenRepository
@@ -22,6 +24,9 @@ class DishListViewModel(
 
     private val _favoriteDishIds = MutableLiveData<Set<Int>>(emptySet())
     val favoriteDishIds: LiveData<Set<Int>> = _favoriteDishIds
+
+    // 串行化收藏切换，避免连点同一菜品时并发读到旧状态重复插入，触发唯一索引冲突闪退
+    private val toggleMutex = Mutex()
 
     fun load(canteenId: Int) {
         viewModelScope.launch {
@@ -37,14 +42,16 @@ class DishListViewModel(
 
     fun toggleFavorite(dishId: Int) {
         viewModelScope.launch {
-            val current = _favoriteDishIds.value ?: emptySet()
-            //判断菜品是不是在收藏里面·
-            if (dishId in current) {
-                repository.deleteFavorite(TokenManager.getUserId(), dishId)
-            } else {
-                repository.insertFavorite(FavoriteDish(userId = TokenManager.getUserId(), dishId = dishId))
+            toggleMutex.withLock {
+                val current = _favoriteDishIds.value ?: emptySet()
+                //判断菜品是不是在收藏里面·
+                if (dishId in current) {
+                    repository.deleteFavorite(TokenManager.getUserId(), dishId)
+                } else {
+                    repository.insertFavorite(FavoriteDish(userId = TokenManager.getUserId(), dishId = dishId))
+                }
+                _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
             }
-            _favoriteDishIds.value = repository.getFavoriteDishIds(TokenManager.getUserId()).toSet()
         }
     }
 

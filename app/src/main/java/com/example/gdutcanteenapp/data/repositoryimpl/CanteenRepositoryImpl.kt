@@ -191,6 +191,14 @@ class CanteenRepositoryImpl(
 
     // ========== Favorite（旧接口 — 本地数据库兼容） ==========
     override suspend fun insertFavorite(favoriteDish: FavoriteDish) {
+        // favorite_dishes 对 user 有外键约束，而本地 user 行只在进食堂/菜品列表时才写入；
+        // 首页/搜索结果直接收藏会因缺少用户记录抛 FOREIGN KEY constraint failed 闪退，这里兜底写入。
+        userDao.insertUser(User(
+            userId = favoriteDish.userId,
+            userName = TokenManager.getUserName(),
+            userAccount = favoriteDish.userId,
+            userPassword = ""
+        ))
         favouriteDao.insert(favoriteDish)
         canteenDao.incrementFavoriteCount(favoriteDish.dishId)
         // 同时调用 API
